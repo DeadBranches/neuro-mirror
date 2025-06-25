@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">NeuroMirror</string>
+    <string name="home_screen_name">Home Screen</string>
+    <string name="splash_screen_name">Splash Screen</string>
+    <string name="unknown_screen_name">Unknown Screen</string>
+    <string name="back_button_description">Go Back</string>
+    <string name="menu_button_description">Menu</string>
+    <string name="shopping_cart_button_description">Shopping Cart</string>
+    <string name="favorite_button_description">Favorite</string>
 </resources>

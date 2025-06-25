@@ -1,21 +1,21 @@
 package com.omnivoiceai.neuromirror
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import com.omnivoiceai.neuromirror.ui.screens.home.HomeActivity
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.omnivoiceai.neuromirror.ui.components.layout.AppBar
+import com.omnivoiceai.neuromirror.ui.navigation.NavGraph
+import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
+import com.omnivoiceai.neuromirror.ui.navigation.hasRoute
 import com.omnivoiceai.neuromirror.ui.theme.NeuroMirrorTheme
 import com.omnivoiceai.neuromirror.utils.Logger
 
@@ -26,13 +26,28 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Logger.d("On Create called")
         Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
+
         setContent {
             NeuroMirrorTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
+                val navController = rememberNavController()
+                val backStackEntry by navController.currentBackStackEntryAsState()
+
+                val appBarVisible = remember(backStackEntry) {
+                    when {
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+                        else -> true
+                    }
+                }
+
+                Scaffold(
+                    topBar = {
+                        if(appBarVisible) {
+                            AppBar(navController)
+                        }
+                     },
                     modifier = Modifier.fillMaxSize()
-                ){
-                    GoToHomeButton()
+                ) { innerPadding ->
+                    NavGraph(navController, Modifier.padding(innerPadding))
                 }
             }
         }
@@ -57,19 +72,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun GoToHomeButton() {
-    val ctx = LocalContext.current
-
-    fun onClick() {
-        val intent = Intent(ctx, HomeActivity::class.java)
-        ctx.startActivity(intent)
-    }
-
-    Button(
-        modifier = Modifier.requiredSize(150.dp, 50.dp),
-        onClick = ::onClick
-    ){
-        Text("Go to homepage")
-    }
-}
