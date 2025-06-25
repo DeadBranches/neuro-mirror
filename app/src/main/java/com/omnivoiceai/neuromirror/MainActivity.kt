@@ -5,8 +5,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -72,10 +76,15 @@ private const val TAG2 = "GreetingComposable"
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Toast.makeText(LocalContext.current, "$TAG onPause", Toast.LENGTH_LONG).show()
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
+    Column {
+        Row {
+            Text(text = "Hello $name!")
+            Text(text = "Hello $name!")
+            Text(text = "Hello $name!")
+        }
+        ScrollableList()
+    }
+
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
         Log.i(TAG2,
@@ -93,5 +102,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     NeuroMirrorTheme {
         Greeting("Android")
+    }
+}
+
+@Composable
+fun ScrollableList() {
+    val items = (0..100).map { "Elem $it" }
+
+    LazyColumn {
+        items(items) {
+            Text(it)
+        }
     }
 }
