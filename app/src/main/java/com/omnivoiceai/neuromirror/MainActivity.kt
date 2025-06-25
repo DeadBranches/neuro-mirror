@@ -7,11 +7,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,13 +59,17 @@ class MainActivity : ComponentActivity() {
 fun GoToHomeButton() {
     val ctx = LocalContext.current
 
+    fun onClick() {
+        val intent = Intent(ctx, HomeActivity::class.java)
+        ctx.startActivity(intent)
+    }
+
     Button(
         modifier = Modifier.requiredSize(150.dp, 50.dp),
-        onClick = {
-            val intent = Intent(ctx, HomeActivity::class.java)
-            ctx.startActivity(intent)
-        }
+        onClick = ::onClick
     ){
         Text("Go to homepage")
     }
+
+
 }

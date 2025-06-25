@@ -102,9 +102,6 @@ class HomeActivity : ComponentActivity() {
         }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar() {
@@ -141,7 +138,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         }
         ScrollableList()
     }
-
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
         Log.i(TAG2,
