@@ -12,12 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar() {
+fun AppBar(navController: NavHostController, title: String? = null, modifier: Modifier = Modifier) {
     return TopAppBar(
-        title = { Text("Title") },
+        title = {
+            title?.let {
+                Text(it)
+            }
+        },
         navigationIcon = {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Filled.Menu, "Menu")
