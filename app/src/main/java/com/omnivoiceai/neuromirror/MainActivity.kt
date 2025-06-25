@@ -15,14 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.omnivoiceai.neuromirror.ui.screens.home.HomeActivity
 import com.omnivoiceai.neuromirror.ui.theme.NeuroMirrorTheme
+import com.omnivoiceai.neuromirror.utils.Logger
 
 private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "On Create called")
+        Logger.d("On Create called")
         Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
         setContent {
             NeuroMirrorTheme {
@@ -38,19 +40,19 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        Log.i(TAG, "On start called")
+        Logger.d("On start called")
         Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
     }
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "On resume called")
+        Logger.d("On resume called")
         Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i(TAG, "On pause called")
+        Logger.d("On pause called")
         Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
     }
 }
@@ -70,6 +72,4 @@ fun GoToHomeButton() {
     ){
         Text("Go to homepage")
     }
-
-
 }
