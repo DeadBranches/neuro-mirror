@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NeuroMirror"
         tools:targetApi="31">
+<!--        <activity-->
+<!--            android:name=".ui.screens.home.HomeActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
