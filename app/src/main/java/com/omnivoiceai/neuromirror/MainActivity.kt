@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,7 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.omnivoiceai.neuromirror.data.Theme
 import com.omnivoiceai.neuromirror.ui.components.layout.AppBar
-import com.omnivoiceai.neuromirror.ui.components.layout.Fab
+import com.omnivoiceai.neuromirror.ui.components.layout.fab.Fab
 import com.omnivoiceai.neuromirror.ui.navigation.NavGraph
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.navigation.hasRoute
