@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                 val fabVisible = remember(backStackEntry) {
                     when {
                         backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> false
                         else -> true
                     }
                 }
