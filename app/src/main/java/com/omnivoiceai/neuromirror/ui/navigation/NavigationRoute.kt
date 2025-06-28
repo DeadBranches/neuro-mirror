@@ -5,4 +5,5 @@ import kotlinx.serialization.Serializable
 sealed interface NavigationRoute {
     @Serializable data object SplashScreen: NavigationRoute
     @Serializable data object HomeScreen: NavigationRoute
+    @Serializable data object SettingsScreen: NavigationRoute
 }
