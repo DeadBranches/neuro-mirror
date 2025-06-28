@@ -47,11 +47,6 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
             }
         },
         navigationIcon = {
-            if(backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Menu, stringResource(R.string.menu_button_description))
-                }
-            }
             if (
                 navController.previousBackStackEntry != null &&
                 backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == false
@@ -59,6 +54,11 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(
                         R.string.back_button_description))
+                }
+            }
+            if(backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Filled.Menu, stringResource(R.string.menu_button_description))
                 }
             }
         },

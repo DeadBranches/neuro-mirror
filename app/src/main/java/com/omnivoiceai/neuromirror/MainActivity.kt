@@ -30,8 +30,8 @@ private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Logger.d("On Create called")
-        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
+//        Logger.d("On Create called")
+//        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
 
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
@@ -41,27 +41,27 @@ class MainActivity : ComponentActivity() {
                 darkTheme = themeState.isDarkTheme
             ) {
                 val navController = rememberNavController()
-                val backStackEntry by navController.currentBackStackEntryAsState()
+//                val backStackEntry by navController.currentBackStackEntryAsState()
 
-                val appBarVisible = remember(backStackEntry) {
-                    when {
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-                        else -> true
-                    }
-                }
-
-                val fabVisible = remember(backStackEntry) {
-                    when {
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> false
-                        else -> true
-                    }
-                }
+//                val appBarVisible = remember(backStackEntry) {
+//                    when {
+//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+//                        else -> true
+//                    }
+//                }
+//
+//                val fabVisible = remember(backStackEntry) {
+//                    when {
+//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> false
+//                        else -> true
+//                    }
+//                }
 
                 Scaffold(
-                    topBar = { if(appBarVisible) AppBar(navController) },
+//                    topBar = { if(appBarVisible) AppBar(navController) },
                     modifier = Modifier.fillMaxSize(),
-                    floatingActionButton = { if(fabVisible) Fab(navController = navController) }
+//                    floatingActionButton = { if(fabVisible) Fab(navController = navController) }
                 ) { innerPadding ->
                     NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
                 }
@@ -69,22 +69,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Logger.d("On start called")
-        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Logger.d("On resume called")
-        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Logger.d("On pause called")
-        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        Logger.d("On start called")
+////        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        Logger.d("On resume called")
+////        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        Logger.d("On pause called")
+////        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
+//    }
 }
 
