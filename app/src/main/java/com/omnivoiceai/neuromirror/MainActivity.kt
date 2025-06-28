@@ -41,27 +41,27 @@ class MainActivity : ComponentActivity() {
                 darkTheme = themeState.isDarkTheme
             ) {
                 val navController = rememberNavController()
-//                val backStackEntry by navController.currentBackStackEntryAsState()
+                val backStackEntry by navController.currentBackStackEntryAsState()
 
-//                val appBarVisible = remember(backStackEntry) {
-//                    when {
-//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-//                        else -> true
-//                    }
-//                }
-//
-//                val fabVisible = remember(backStackEntry) {
-//                    when {
-//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-//                        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> false
-//                        else -> true
-//                    }
-//                }
+                val appBarVisible = remember(backStackEntry) {
+                    when {
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+                        else -> true
+                    }
+                }
+
+                val fabVisible = remember(backStackEntry) {
+                    Logger.info(backStackEntry?.destination?.hasRoute<NavigationRoute.NoteDetailsScreen>().toString())
+                    when {
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> true
+                        else -> false
+                    }
+                }
 
                 Scaffold(
-//                    topBar = { if(appBarVisible) AppBar(navController) },
+                    topBar = { if(appBarVisible) AppBar(navController) },
                     modifier = Modifier.fillMaxSize(),
-//                    floatingActionButton = { if(fabVisible) Fab(navController = navController) }
+                    floatingActionButton = { if(fabVisible) Fab(navController = navController) }
                 ) { innerPadding ->
                     NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
                 }

@@ -3,6 +3,7 @@ package com.omnivoiceai.neuromirror.ui.screens.home
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,6 +37,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.Note
+import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
 import java.time.Instant
@@ -57,6 +59,7 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
             "What happened today?",
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
+            modifier= Modifier.fillMaxWidth(),
         )
         TextField(
             value = text,
@@ -79,9 +82,8 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
         Text(
             "History",
             style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center,
         )
-        ScrollableList(notes=notesState.notes)
+        ScrollableList(notes=notesState.notes, navController=navController)
     }
 
 
@@ -99,25 +101,26 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
 }
 
 @Composable
-fun ScrollableList(notes: List<Note>) {
+fun ScrollableList(notes: List<Note>, navController: NavHostController) {
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(4.dp)
     ) {
         items(notes) {
-            MaterialListItem(it)
+            MaterialListItem(it, navController)
         }
     }
 }
 
 @Composable
-fun MaterialListItem(note: Note, modifier: Modifier = Modifier) {
+fun MaterialListItem(note: Note, navController: NavHostController, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .fillMaxWidth()
+            .clickable { navController.navigate(NavigationRoute.NoteDetailsScreen(id = note.id)) }
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         Image(
