@@ -17,9 +17,11 @@ fun Fab(navController: NavHostController, modifier: Modifier = Modifier) {
 
     Logger.d("🧭 Current destination route: ${backStackEntry?.destination?.route}")
 
+    val fabAction = FabAction(backStackEntry=backStackEntry, navController=navController);
+
     return FloatingActionButton(
-        onClick = { fabActionsForRouteOnClick(backStackEntry = backStackEntry, navController=navController) },
-        content = { FabActionsForRoute(backStackEntry = backStackEntry, navController=navController) },
+        onClick = { fabAction.onClick() },
+        content = {fabAction.Content() },
     )
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,8 +31,8 @@ private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Logger.d("On Create called")
-        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
+//        Logger.d("On Create called")
+//        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
 
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
@@ -51,10 +52,10 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val fabVisible = remember(backStackEntry) {
+                    Logger.info(backStackEntry?.destination?.hasRoute<NavigationRoute.NoteDetailsScreen>().toString())
                     when {
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> false
-                        else -> true
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> true
+                        else -> false
                     }
                 }
 
@@ -69,22 +70,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Logger.d("On start called")
-        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Logger.d("On resume called")
-        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Logger.d("On pause called")
-        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        Logger.d("On start called")
+////        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        Logger.d("On resume called")
+////        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        Logger.d("On pause called")
+////        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
+//    }
 }
 

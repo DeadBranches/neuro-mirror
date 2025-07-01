@@ -28,13 +28,12 @@ fun ThemeSettings(state: ThemeState, onThemeSelected: (Theme) -> Unit){
                         selected = (theme == state.theme),
                         onClick = { onThemeSelected(theme) },
                         role = Role.RadioButton,
-                    )
-                    .padding(horizontal = 16.dp),
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 RadioButton(
                     selected = (theme == state.theme),
-                    onClick = null, // null recommended for accessibility with screenreaders
+                    onClick = null,
                 )
                 Text(
                     text = theme.toString(),

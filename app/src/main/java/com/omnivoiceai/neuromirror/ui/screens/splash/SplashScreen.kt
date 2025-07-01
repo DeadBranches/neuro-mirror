@@ -11,11 +11,10 @@ import com.omnivoiceai.neuromirror.ui.screens.splash.components.GoToHomeButton
 
 
 @Composable
-fun SplashScreen(navController: NavHostController){
+fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier ){
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent
-//        color = MaterialTheme.colorScheme.background
+        color = Color.Transparent,
     ) {
         GoToHomeButton(navController = navController)
     }
