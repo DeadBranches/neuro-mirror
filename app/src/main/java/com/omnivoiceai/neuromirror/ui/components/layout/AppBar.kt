@@ -1,8 +1,10 @@
 package com.omnivoiceai.neuromirror.ui.components.layout
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -50,8 +53,7 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
                 backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == false
             ) {
                 IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(
-                        R.string.back_button_description))
+                    Icon(Icons.Outlined.ArrowBackIosNew, stringResource(R.string.back_button_description), )
                 }
             }
         },
@@ -72,6 +74,6 @@ fun AppBarActionsForRoute(navController: NavHostController, backStackEntry: NavB
 @Composable
 fun HomeActions(navController: NavHostController){
     IconButton(onClick = { navController.navigate(NavigationRoute.ProfileScreen) }) {
-        Icon(Icons.Filled.AccountCircle, stringResource(R.string.profile_button_description))
+        Icon(Icons.Filled.AccountCircle, stringResource(R.string.profile_button_description), modifier = Modifier.size(24.dp))
     }
 }

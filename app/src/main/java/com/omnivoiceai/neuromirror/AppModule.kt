@@ -5,8 +5,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.omnivoiceai.neuromirror.data.database.AppDatabase
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
+import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThemeRepository
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
+import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -26,5 +28,8 @@ val appModule = module {
         ).build()
     }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
+    single { ProfileRepository(get()) }
+
+    viewModel { ProfileViewModel(get()) }
 
 }
