@@ -1,24 +1,12 @@
 package com.omnivoiceai.neuromirror.ui.screens.home
 
-import android.content.res.Resources.Theme
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,17 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.Note
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
-import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
 import com.omnivoiceai.neuromirror.ui.screens.notes.ScrollableList
@@ -58,11 +42,13 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
     var text by remember { mutableStateOf("") }
 
     Column(
-        modifier=Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier= Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            "What happened today?",
+            stringResource(R.string.home_page_title),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
@@ -82,7 +68,8 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
                 onClick = { text = "" },
                 enabled = text.isNotEmpty()
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel),
+                )
             }
             Button(
                 onClick = {
@@ -92,12 +79,12 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
                 },
                 enabled = text.isNotEmpty()
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
         EmptySpacer()
         Text(
-            "History",
+            stringResource(R.string.home_page_history),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
