@@ -55,7 +55,7 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
                 }
             }
         },
-        actions = { AppBarActionsForRoute(backStackEntry) },
+        actions = { AppBarActionsForRoute(navController, backStackEntry) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceDim
         )
@@ -63,15 +63,15 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AppBarActionsForRoute(backStackEntry: NavBackStackEntry?){
+fun AppBarActionsForRoute(navController: NavHostController, backStackEntry: NavBackStackEntry?){
     when {
-        backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> HomeActions()
+        backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> HomeActions(navController)
     }
 }
 
 @Composable
-fun HomeActions(){
-    IconButton(onClick = { /*TODO*/ }) {
+fun HomeActions(navController: NavHostController){
+    IconButton(onClick = { navController.navigate(NavigationRoute.ProfileScreen) }) {
         Icon(Icons.Filled.AccountCircle, stringResource(R.string.profile_button_description))
     }
 }

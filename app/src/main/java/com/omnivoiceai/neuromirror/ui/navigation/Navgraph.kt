@@ -12,6 +12,7 @@ import androidx.navigation.toRoute
 import com.omnivoiceai.neuromirror.ui.screens.home.HomeScreen
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.NoteDetailsScreen
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
+import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileScreen
 import com.omnivoiceai.neuromirror.ui.screens.settings.SettingsScreen
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.splash.SplashScreen
@@ -42,6 +43,9 @@ fun NavGraph(
         composable<NavigationRoute.NoteDetailsScreen>{ backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.NoteDetailsScreen>()
             NoteDetailsScreen(note = notesState.notes.first { note -> note.id == route.id })
+        }
+        composable<NavigationRoute.ProfileScreen> {
+            ProfileScreen(navController)
         }
     }
 }
