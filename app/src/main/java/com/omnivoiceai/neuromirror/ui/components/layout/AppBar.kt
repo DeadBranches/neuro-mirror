@@ -38,6 +38,10 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
             R.string.splash_screen_name)
         backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> stringResource(
             R.string.home_screen_name)
+        backStackEntry?.destination?.hasRoute<NavigationRoute.SettingsScreen>() == true -> stringResource(
+            R.string.settings_page_title)
+        backStackEntry?.destination?.hasRoute<NavigationRoute.ProfileScreen>() == true -> stringResource(
+            R.string.profile_screen_name)
         else -> null
     }
 

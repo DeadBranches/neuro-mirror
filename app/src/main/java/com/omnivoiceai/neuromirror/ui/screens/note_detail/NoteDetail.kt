@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,11 +24,11 @@ import com.omnivoiceai.neuromirror.ui.screens.notes.components.NoteDate
 @Composable
 fun NoteDetailsScreen(note: Note, modifier: Modifier = Modifier){
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(0.dp, 16.dp)
     ){
         Text(note.content, modifier = Modifier.padding(16.dp, 0.dp))
         EmptySpacer()
-        NoteDate(note = note, alignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth())
+        NoteDate(note = note, modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp))
         EmptySpacer()
         HorizontalDivider(thickness = 2.dp)
         Column(
@@ -38,16 +39,12 @@ fun NoteDetailsScreen(note: Note, modifier: Modifier = Modifier){
         ) {
             Text("Emotion detected")
             note.emotionDetected?.let {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(16.dp, 0.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(it.toEmoji())
-                    Spacer(Modifier.size(8.dp))
-                    Text(it.name)
-                }
+                Text(
+                    it.toEmoji(),
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Text(it.name)
             }
             if(note.emotionDetected == null)
                 Text("Not detected yet", modifier = Modifier.padding(16.dp, 0.dp))
