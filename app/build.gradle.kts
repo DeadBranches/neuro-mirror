@@ -56,7 +56,6 @@ android {
 //}
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -90,4 +89,5 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation(libs.onnxruntime)
 }

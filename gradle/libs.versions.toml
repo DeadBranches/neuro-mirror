@@ -23,6 +23,7 @@ navigationCompose = "2.8.9"
 ksp = "2.0.0-1.0.24"
 room = "2.6.1"
 gson = "2.10.1"
+onnxruntime = "1.15.1"
 
 
 [libraries]
@@ -57,6 +58,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+onnxruntime = { group = "com.microsoft.onnxruntime", name = "onnxruntime-android", version.ref = "onnxruntime" }
 
 
 [plugins]

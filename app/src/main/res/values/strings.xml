@@ -2,10 +2,23 @@
     <string name="app_name">NeuroMirror</string>
     <string name="home_screen_name">Home Screen</string>
     <string name="splash_screen_name">Splash Screen</string>
+    <string name="profile_screen_name">Profile</string>
     <string name="unknown_screen_name">Unknown Screen</string>
     <string name="back_button_description">Go Back</string>
     <string name="menu_button_description">Menu</string>
     <string name="shopping_cart_button_description">Shopping Cart</string>
     <string name="profile_button_description">Profile</string>
     <string name="favorite_button_description">Favorite</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="home_page_title">What happened today?</string>
+    <string name="home_page_history">History</string>
+    <string name="settings_page_title">Settings</string>
+    <string name="settings_page_theme_title">Theme Settings</string>
+    <string name="username">Username</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="badges">Your Badges</string>
+    <string name="emotion_radar">Radar Emotions</string>
+    <string name="emotion_timeline">Emotions Timeline</string>
 </resources>

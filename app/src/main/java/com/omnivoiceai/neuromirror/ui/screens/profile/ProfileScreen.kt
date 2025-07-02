@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.utils.Logger
 
@@ -55,17 +57,18 @@ fun ProfileScreen(viewModel: ProfileViewModel, navController: NavHostController 
     ) {
         CircleAvatar(image = "", size = Size.Xl)
         EmptySpacer()
-        LabelWithEdit(viewModel.state.username, viewModel::setUsername, updateOnChange = false, hintText = "Username")
+        LabelWithEdit(viewModel.state.username, viewModel::setUsername, updateOnChange = false, hintText = stringResource(R.string.username))
         Row {
-            LabelWithEdit(viewModel.state.firstName, viewModel::setFirstName, hintText = "First Name")
-            LabelWithEdit(viewModel.state.lastName, viewModel::setLastName, hintText = "Last Name")
+            LabelWithEdit(viewModel.state.firstName, viewModel::setFirstName, hintText = stringResource(R.string.first_name))
+            LabelWithEdit(viewModel.state.lastName, viewModel::setLastName, hintText = stringResource(R.string.last_name))
         }
         EmptySpacer(height = 32.dp)
-        Text(text = "Your Badges")
+        Text(
+            stringResource(R.string.badges))
         EmptySpacer(height = 32.dp)
-        Text(text = "Radar Emotions")
+        Text(stringResource(R.string.emotion_radar))
         EmptySpacer(height = 32.dp)
-        Text(text = "Emotions Timeline")
+        Text(stringResource(R.string.emotion_timeline))
     }
 }
 

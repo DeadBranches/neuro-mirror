@@ -8,9 +8,31 @@ import androidx.room.Relation
 import com.omnivoiceai.neuromirror.data.database.question.Question
 import java.util.Date
 
-enum class EmotionDetected { Sadness, Anger, Love, Surprise, Fear,
-                             Happiness, Neutral, Disgust, Shame, Guilt,
-                             Confusion, Desire, Sarcasm }
+enum class EmotionDetected {
+    Sadness, Anger, Love, Surprise, Fear,
+    Happiness, Neutral, Disgust, Shame, Guilt,
+    Confusion, Desire, Sarcasm
+}
+
+fun EmotionDetected?.toEmoji(): String {
+    return when (this) {
+        EmotionDetected.Sadness -> "😢"
+        EmotionDetected.Anger -> "😠"
+        EmotionDetected.Love -> "❤️"
+        EmotionDetected.Surprise -> "😲"
+        EmotionDetected.Fear -> "😱"
+        EmotionDetected.Happiness -> "😄"
+        EmotionDetected.Neutral -> "😐"
+        EmotionDetected.Disgust -> "🤢"
+        EmotionDetected.Shame -> "🙈"
+        EmotionDetected.Guilt -> "😔"
+        EmotionDetected.Confusion -> "😕"
+        EmotionDetected.Desire -> "🔥"
+        EmotionDetected.Sarcasm -> "😏"
+        null -> "❓"
+    }
+}
+
 
 @Entity
 data class Note(

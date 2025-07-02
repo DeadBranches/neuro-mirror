@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeuroMirror</string>
+    <string name="home_screen_name">Home</string>
+    <string name="splash_screen_name">Splash</string>
+    <string name="profile_screen_name">Profilo</string>
+    <string name="unknown_screen_name">Schermata Sconosciuta</string>
+    <string name="back_button_description">Torna indietro</string>
+    <string name="menu_button_description">Menu</string>
+    <string name="shopping_cart_button_description">Shopping Cart</string>
+    <string name="profile_button_description">Profilo</string>
+    <string name="favorite_button_description">Preferito</string>
+    <string name="save">Salva</string>
+    <string name="cancel">Annulla</string>
+    <string name="home_page_title">Cos\'è successo oggi?</string>
+    <string name="home_page_history">Storico</string>
+    <string name="settings_page_title">Impostazioni</string>
+    <string name="settings_page_theme_title">Impostazioni del tema</string>
+    <string name="username">Username</string>
+    <string name="first_name">Nome</string>
+    <string name="last_name">Cognome</string>
+    <string name="badges">I tuoi badges</string>
+    <string name="emotion_radar">Radar delle emozioni</string>
+    <string name="emotion_timeline">Timeline delle emozioni</string>
+</resources>

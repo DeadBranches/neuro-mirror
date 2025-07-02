@@ -10,9 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeSettings
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
@@ -24,7 +26,9 @@ fun SettingsScreen(navController: NavController, themeViewModel: ThemeViewModel)
             .fillMaxSize()
             .padding(horizontal = 16.dp, 8.dp)
     ){
-        Text("Theme Settings",
+        Text(
+            stringResource(
+                R.string.settings_page_theme_title),
             style = MaterialTheme.typography.titleLarge)
         ThemeSettings(themeState, themeViewModel::changeTheme )
     }
