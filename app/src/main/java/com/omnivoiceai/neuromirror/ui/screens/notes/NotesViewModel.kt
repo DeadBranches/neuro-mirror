@@ -1,11 +1,16 @@
 package com.omnivoiceai.neuromirror.ui.screens.notes
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omnivoiceai.neuromirror.data.database.note.EmotionDetected
 import com.omnivoiceai.neuromirror.data.database.note.Note
+import com.omnivoiceai.neuromirror.data.remote.generateQuestions
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
+import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
+import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
+import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -14,13 +19,19 @@ import kotlinx.coroutines.launch
 
 class NotesViewModel(
     private val repository: NoteRepository,
-    private val emotionRepository: EmotionRepository
+    private val emotionRepository: EmotionRepository,
+    private val introspectionRepository: IntrospectionRepository,
+    private val questionRepository: QuestionRepository,
+    private val applicationContext: Context
 ): ViewModel() {
     val state = repository.notes.map { NotesState(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = NotesState(emptyList())
     )
+    
+    // Getter per il repository
+    fun getNoteRepository(): NoteRepository = repository
 
     val actions = object : NotesActions {
 
@@ -38,8 +49,23 @@ class NotesViewModel(
         }
 
         override fun generateQuestions(note: Note): Job = viewModelScope.launch {
-            throw Error("not implemented")
+            try {
+                // Use the new extension function for type-safe question generation
+                val response = introspectionRepository.generateQuestions(
+                    context = applicationContext,
+                    noteContent = note.content,
+                    noteId = note.id
+                )
+                
+                // Parse and save questions using the response data
+                questionRepository.saveQuestions(response.questions, note.id)
+                
+                // Update the note to mark it as evaluated
+                val updatedNote = note.copy(isEvaluated = true)
+                repository.upsert(updatedNote)
+            } catch (e: Exception) {
+                Logger.error("Error generating questions", e)
+            }
         }
-
     }
 }

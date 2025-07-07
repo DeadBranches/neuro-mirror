@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.splash.components.GoToHomeButton
 
 
@@ -29,7 +30,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
     ) {
         Text("Welcome to NeuroMirror", style = MaterialTheme.typography.headlineLarge)
         Text("A cognitive-emotional diary that reflects who you are", textAlign = TextAlign.Center, fontStyle = FontStyle.Italic)
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {Text("Login") }
+        Button(onClick = { navController.navigate(NavigationRoute.LoginScreen) }, modifier = Modifier.fillMaxWidth()) {Text("Login") }
         Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {Text("Register") }
         GoToHomeButton(navController = navController)
     }

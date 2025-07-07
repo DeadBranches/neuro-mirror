@@ -8,7 +8,8 @@ import com.omnivoiceai.neuromirror.data.database.note.NoteDao
 import com.omnivoiceai.neuromirror.data.database.question.MultipleChoiceQuestion
 import com.omnivoiceai.neuromirror.data.database.question.OneShotQuestion
 import com.omnivoiceai.neuromirror.data.database.question.Question
-import com.omnivoiceai.neuromirror.data.database.question.QuestionDao
+import com.omnivoiceai.neuromirror.data.database.question.QuestionAnswer
+import com.omnivoiceai.neuromirror.data.database.question.QuestionDAO
 import com.omnivoiceai.neuromirror.utils.Converters
 
 @Database(
@@ -16,13 +17,13 @@ import com.omnivoiceai.neuromirror.utils.Converters
         Note::class,
         Question::class,
         OneShotQuestion::class,
-        MultipleChoiceQuestion::class
+        MultipleChoiceQuestion::class,
+        QuestionAnswer::class
     ],
-    version = 1
+    version = 2
 )
-@TypeConverters(Converters
-::class)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
-    abstract fun questionDao(): QuestionDao
+    abstract fun questionDao(): QuestionDAO
 }

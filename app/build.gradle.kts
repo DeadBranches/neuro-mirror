@@ -1,20 +1,21 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    id("com.google.gms.google-services")
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.ktorfit)
 }
 
 android {
     namespace = "com.omnivoiceai.neuromirror"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.omnivoiceai.neuromirror"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -70,6 +71,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,4 +97,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.onnxruntime)
     implementation(libs.firebase.bom)
+    implementation(libs.play.services.auth)
+    implementation(libs.bcprov.jdk15to18)
+    implementation(libs.ktorfit.lib)
+    ksp(libs.ktorfit.ksp)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
 }

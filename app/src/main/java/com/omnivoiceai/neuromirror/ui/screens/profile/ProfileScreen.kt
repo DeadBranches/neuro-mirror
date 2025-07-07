@@ -152,11 +152,7 @@ fun LabelWithEdit(
         contentAlignment = Alignment.Center,
     ){
         if(!edit) {
-            field.let {
-                if(field.isEmpty())
-                    Text(text = hintText)
-                else Text(it)
-            }
+            Text(field.ifEmpty { hintText }, modifier = Modifier.clickable { edit = true })
             Icon(Icons.Outlined.Edit, contentDescription = "Edit", modifier = Modifier
                 .align(Alignment.TopEnd)
                 .absoluteOffset(y = 0.dp)
