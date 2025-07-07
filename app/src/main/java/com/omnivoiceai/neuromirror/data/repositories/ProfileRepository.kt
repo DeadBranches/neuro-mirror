@@ -1,9 +1,11 @@
 package com.omnivoiceai.neuromirror.data.repositories
 
+import androidx.credentials.CustomCredential
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.flow.map
 
 class ProfileRepository(
@@ -22,4 +24,5 @@ class ProfileRepository(
     suspend fun setUsername(username: String) = dataStore.edit { it[USERNAME_KEY] = username }
     suspend fun setFirstName(firstName: String) = dataStore.edit { it[FIRST_NAME_KEY] = firstName }
     suspend fun setLastName(lastName: String) = dataStore.edit { it[LAST_NAME_KEY] = lastName }
+
 }

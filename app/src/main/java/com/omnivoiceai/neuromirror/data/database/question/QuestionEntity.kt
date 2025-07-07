@@ -29,6 +29,16 @@ data class MultipleChoiceQuestion(
     @ColumnInfo(name = "correct_index") val correctIndex: Int
 )
 
+@Entity(tableName = "question_answers")
+data class QuestionAnswer(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "question_id") val questionId: Int,
+    @ColumnInfo(name = "answer_text") val answerText: String? = null,
+    @ColumnInfo(name = "selected_option_index") val selectedOptionIndex: Int? = null,
+    @ColumnInfo(name = "selected_option_text") val selectedOptionText: String? = null,
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
+)
+
 data class QuestionWithDetails(
     @Embedded val question: Question,
 
@@ -43,4 +53,26 @@ data class QuestionWithDetails(
         entityColumn = "questionId"
     )
     val multipleChoiceData: MultipleChoiceQuestion?
+)
+
+data class QuestionWithAnswer(
+    @Embedded val question: Question,
+    
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "questionId"
+    )
+    val oneShotData: OneShotQuestion?,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "questionId"
+    )
+    val multipleChoiceData: MultipleChoiceQuestion?,
+    
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "question_id"
+    )
+    val answer: QuestionAnswer?
 )

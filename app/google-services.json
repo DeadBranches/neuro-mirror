@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "566551518283",
+    "project_id": "neuromirror-omnivoice",
+    "storage_bucket": "neuromirror-omnivoice.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566551518283:android:c7808aa6241ab1c9cd41ce",
+        "android_client_info": {
+          "package_name": "com.omnivoiceai.neuromirror"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566551518283-lend0codu9ubr1961hp4esr37kvral3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omnivoiceai.neuromirror",
+            "certificate_hash": "a05e802edfa9537132a2855f3bc51abef132b82b"
+          }
+        },
+        {
+          "client_id": "566551518283-qsa121g4oki4v2p5806clhsuva88gthn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNHdj3uV2H6gpYOTJck6gO8J7O8TyJdcU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566551518283-qsa121g4oki4v2p5806clhsuva88gthn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
