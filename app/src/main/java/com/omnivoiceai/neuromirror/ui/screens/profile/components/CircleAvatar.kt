@@ -19,27 +19,32 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.omnivoiceai.neuromirror.utils.Logger
 
-
 enum class ImageType { Local, Network }
 enum class Size { S, M, Xl, XXL }
 
 @Composable
-fun CircleAvatar(image: String, modifier: Modifier = Modifier, type: ImageType = ImageType.Network, size: Size = Size.M, description: String = "Description"){
-    Logger.info(image);
+fun CircleAvatar(
+    image: String, 
+    modifier: Modifier = Modifier, 
+    type: ImageType = ImageType.Network, 
+    size: Size = Size.M, 
+    description: String = "Description"
+) {
+    Logger.info(image)
     val imageSize = when (size) {
         Size.S -> 32.dp
         Size.M -> 64.dp
         Size.Xl -> 92.dp
         Size.XXL -> 128.dp
-        else -> 64.dp
     }
-    if(type == ImageType.Local || image.isEmpty()){
+    
+    if (type == ImageType.Local || image.isEmpty()) {
         Image(
             Icons.Outlined.Image,
             description,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer),
-            modifier = Modifier
+            modifier = modifier
                 .size(imageSize)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer)

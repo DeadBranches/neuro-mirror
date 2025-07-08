@@ -1,10 +1,8 @@
 package com.omnivoiceai.neuromirror.ui.screens.profile.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,10 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.PhotoLibrary
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.omnivoiceai.neuromirror.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageSelectionBottomSheet(
     showBottomSheet: Boolean,
@@ -41,65 +36,40 @@ fun ImageSelectionBottomSheet(
     onGalleryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = onDismiss,
-            dragHandle = {
-                Box(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(4.dp)
-                        .background(
-                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            RoundedCornerShape(2.dp)
-                        )
-                )
-            },
-            modifier = modifier
+    GenericBottomSheet(
+        showBottomSheet = showBottomSheet,
+        onDismiss = onDismiss,
+        title = stringResource(R.string.select_image_source),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.select_image_source),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ImageOptionCard(
-                        icon = Icons.Outlined.CameraAlt,
-                        title = stringResource(R.string.camera),
-                        onClick = {
-                            onCameraClick()
-                            onDismiss()
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    ImageOptionCard(
-                        icon = Icons.Outlined.PhotoLibrary,
-                        title = stringResource(R.string.gallery),
-                        onClick = {
-                            onGalleryClick()
-                            onDismiss()
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+            ImageOptionCard(
+                icon = Icons.Outlined.CameraAlt,
+                title = stringResource(R.string.camera),
+                onClick = {
+                    onCameraClick()
+                    onDismiss()
+                },
+                modifier = Modifier.weight(1f)
+            )
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            ImageOptionCard(
+                icon = Icons.Outlined.PhotoLibrary,
+                title = stringResource(R.string.gallery),
+                onClick = {
+                    onGalleryClick()
+                    onDismiss()
+                },
+                modifier = Modifier.weight(1f)
+            )
         }
+        
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 

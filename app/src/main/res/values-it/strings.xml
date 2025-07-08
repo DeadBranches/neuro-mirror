@@ -25,4 +25,36 @@
     <string name="select_image_source">Seleziona sorgente immagine</string>
     <string name="camera">Fotocamera</string>
     <string name="gallery">Galleria</string>
+    <string name="see_others">Vedi Altri</string>
+    <string name="see_full_timeline">Vedi Timeline Completa</string>
+    <string name="all_badges">Tutti i Badge</string>
+    <string name="no_emotions_recorded">Nessuna emozione registrata</string>
+    <string name="no_badges_available">Nessun badge disponibile</string>
+    <string name="first_note">Prima nota</string>
+    <string name="streak_of_3">Serie di 3</string>
+    <string name="week_warrior">Guerriero della Settimana</string>
+    <string name="reflection_master">Maestro della Riflessione</string>
+    <string name="mindful_moment">Momento Mindful</string>
+    <string name="positive_vibes">Vibes Positive</string>
+    <string name="emotion_tracker">Tracker Emozioni</string>
+    <string name="self_care">Cura di Sé</string>
+    
+    <!-- Notification strings -->
+    <string name="notification_channel_id">neuromirror_notifications</string>
+    <string name="notification_channel_name">Promemoria NeuroMirror</string>
+    <string name="notification_channel_description">Promemoria giornalieri e check-in</string>
+    
+    <string name="notification_missing_title">Ci manchi!</string>
+    <string name="notification_missing_body">È passato un po\' di tempo dalla tua ultima visita. Come ti senti oggi?</string>
+    
+    <string name="notification_daily_title">Com\'è andata la giornata?</string>
+    <string name="notification_daily_body">Prenditi un momento per riflettere sulle tue emozioni di oggi</string>
+    
+    <string name="notification_test_title">Notifica di Test</string>
+    <string name="notification_test_body">Questa è una notifica di test da NeuroMirror</string>
+    
+    <string name="settings_notifications">Notifiche</string>
+    <string name="settings_test_notification">Notifica di Test (60s)</string>
+    <string name="settings_test_notification_desc">Invia una notifica di test tra 60 secondi</string>
+    <string name="test_notification_scheduled">Notifica di test programmata per 60 secondi</string>
 </resources>

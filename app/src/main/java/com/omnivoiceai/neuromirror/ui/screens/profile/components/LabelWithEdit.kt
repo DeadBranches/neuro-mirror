@@ -40,7 +40,7 @@ fun LabelWithEdit(
     updateOnChange: Boolean = true,
     isEditingMode: Boolean = false,
     hintText: String = "",
-){
+) {
     var edit by rememberSaveable { mutableStateOf(false) }
     var field by rememberSaveable { mutableStateOf("") }
 
@@ -65,25 +65,27 @@ fun LabelWithEdit(
         modifier = modifier
             .size(
                 LocalConfiguration.current.screenWidthDp.dp / 2, height = 64.dp
-            )
-//            .background(MaterialTheme.colorScheme.surfaceDim)
-        ,
+            ),
         contentAlignment = Alignment.Center,
-    ){
-        if(!edit) {
-            Text(field.ifEmpty { hintText }, modifier = Modifier.clickable { edit = true })
-            Icon(
-                Icons.Outlined.Edit, contentDescription = "Edit", modifier = Modifier
-                .align(Alignment.TopEnd)
-                .absoluteOffset(y = 0.dp)
-                .clickable { edit = true }
+    ) {
+        if (!edit) {
+            Text(
+                field.ifEmpty { hintText }, 
+                modifier = Modifier.clickable { edit = true }
             )
-        }
-        else {
+            Icon(
+                Icons.Outlined.Edit, 
+                contentDescription = "Edit", 
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .absoluteOffset(y = 0.dp)
+                    .clickable { edit = true }
+            )
+        } else {
             val keyboardController = LocalSoftwareKeyboardController.current
             TextField(
                 value = field,
-                onValueChange = { field = it; if(updateOnChange) onSave(field)  },
+                onValueChange = { field = it; if (updateOnChange) onSave(field) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done,
@@ -96,14 +98,15 @@ fun LabelWithEdit(
                     onDone = {
                         Logger.info("Saving $field")
                         edit = false
-                        if(!updateOnChange)
+                        if (!updateOnChange)
                             onSave(field)
                         keyboardController?.hide()
                     }
                 ),
-                visualTransformation = isPassword.let{
-                    if(it) PasswordVisualTransformation()
-                    else VisualTransformation.None
+                visualTransformation = if (isPassword) {
+                    PasswordVisualTransformation()
+                } else {
+                    VisualTransformation.None
                 },
                 modifier = Modifier.fillMaxWidth()
             )

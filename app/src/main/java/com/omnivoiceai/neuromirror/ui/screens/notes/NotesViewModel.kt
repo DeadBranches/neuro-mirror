@@ -27,7 +27,6 @@ class NotesViewModel(
         initialValue = NotesState(emptyList())
     )
     
-    // Getter per il repository
     fun getNoteRepository(): NoteRepository = repository
 
     val actions = object : NotesActions {
@@ -53,15 +52,13 @@ class NotesViewModel(
                     threadId = note.id.toString()
                 )
                 
-                // Parse and save questions using the response data
                 questionRepository.saveQuestions(response.questions, note.id)
                 
-                // Update the note to mark it as evaluated
                 val updatedNote = note.copy(isEvaluated = true)
                 repository.upsert(updatedNote)
             } catch (e: Exception) {
                 Logger.error("Error generating questions", e)
-            }
+        }
         }
     }
 }
