@@ -13,14 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -45,16 +47,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.EmotionRadar
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.TimelineItem
 import com.omnivoiceai.neuromirror.utils.Logger
+import com.omnivoiceai.neuromirror.utils.rememberCameraLauncher
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navController: NavHostController ,modifier: Modifier = Modifier){
-    val scroll = rememberScrollState()
+    val cameraLauncher = rememberCameraLauncher(
+        onPictureTaken = { imageUri -> viewModel.setImageUrl(imageUri.toString()) }
+    )
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +69,25 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navContro
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            CircleAvatar(image = "", size = Size.Xl)
+            Box {
+                CircleAvatar(image = viewModel.state.imageUrl, size = Size.Xl)
+                IconButton (
+                    onClick = cameraLauncher::captureImage,
+//                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .clip(CircleShape)
+                        .size(32.dp)
+                        .background(MaterialTheme.colorScheme.primary)
+                ) {
+                    Icon(
+                        Icons.Outlined.PhotoCamera,
+                        contentDescription = "Camera icon",
+                        modifier = Modifier.fillMaxSize().padding(8.dp)
+                    )
+                }
+            }
+
             EmptySpacer()
             LabelWithEdit(viewModel.state.username, viewModel::setUsername, updateOnChange = false, hintText = stringResource(R.string.username))
 
@@ -102,6 +126,7 @@ enum class Size { S, M, Xl, XXL }
 
 @Composable
 fun CircleAvatar(image: String, modifier: Modifier = Modifier, type: ImageType = ImageType.Network, size: Size = Size.M, description: String = "Description"){
+    Logger.info(image);
     val imageSize = when (size) {
         Size.S -> 32.dp
         Size.M -> 64.dp
@@ -122,10 +147,11 @@ fun CircleAvatar(image: String, modifier: Modifier = Modifier, type: ImageType =
                 .padding(16.dp)
         )
     } else {
-//    val size = 64.dp
-
         AsyncImage(
-            model = "https://www.linkiesta.it/wp-content/uploads/2023/03/random-linkiesta.jpg",
+            ImageRequest.Builder(LocalContext.current)
+                .data(image)
+                .crossfade(true)
+                .build(),
             contentDescription = description,
             contentScale = ContentScale.Crop,
             modifier = modifier
