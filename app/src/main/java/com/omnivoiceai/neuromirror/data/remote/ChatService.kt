@@ -55,7 +55,6 @@ data class ServerMessageContent(
     val questions: List<QuestionData> = emptyList()
 )
 
-// Legacy data classes (kept for compatibility)
 @Serializable
 data class SendMessageResponse(
     val threadId: String = "",
@@ -77,5 +76,5 @@ interface ChatService {
     @Headers("Content-Type: application/json")
     suspend fun sendMessage(
         @Body body: SendMessageRequest
-    ): ServerResponse  // Use the new response format
+    ): ServerResponse
 }
