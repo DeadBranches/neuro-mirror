@@ -23,7 +23,6 @@ data class SendMessageRequest(
     val agentType: AgentType
 )
 
-// New data classes for actual server response format
 @Serializable
 data class ServerResponse(
     val threadId: String = "",
@@ -71,7 +70,7 @@ data class TextWrapper(
     val value: String
 )
 
-interface ChatService {
+interface ChatDataSource {
     @POST("chat")
     @Headers("Content-Type: application/json")
     suspend fun sendMessage(

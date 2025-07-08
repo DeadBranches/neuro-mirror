@@ -8,8 +8,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.omnivoiceai.neuromirror.data.database.AppDatabase
 import com.omnivoiceai.neuromirror.data.ml.EmotionModel
-import com.omnivoiceai.neuromirror.data.remote.ChatService
-import com.omnivoiceai.neuromirror.data.remote.createChatService
+import com.omnivoiceai.neuromirror.data.remote.ChatDataSource
+import com.omnivoiceai.neuromirror.data.remote.createChatDataSource
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionNeuroImpl
@@ -122,13 +122,13 @@ val appModule = module {
             }
         }
     }
-    single<ChatService> {
+    single<ChatDataSource> {
         Ktorfit.Builder()
 //            .baseUrl("http://192.168.1.226:8000/")
             .baseUrl("https://api.ai.digitalnext.business/")
             .httpClient(get<HttpClient>())
             .build()
-            .createChatService()
+            .createChatDataSource()
     }
 
     single { get<Context>().dataStore }

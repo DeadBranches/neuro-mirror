@@ -21,7 +21,7 @@ interface IntrospectionRepository {
 
 class IntrospectionNeuroImpl(
     private val context: Context,
-    private val api: ChatService
+    private val api: ChatDataSource
 ) : IntrospectionRepository {
 
     override suspend fun sendMessage(
