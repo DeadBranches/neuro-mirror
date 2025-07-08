@@ -85,7 +85,7 @@ fun NavGraph(
         }
         composable<NavigationRoute.ProfileScreen> {
             val profileVm = koinViewModel<ProfileViewModel>()
-            ProfileScreen(profileVm, navController)
+            ProfileScreen(viewModel = profileVm, notesState = notesState, navController)
         }
         composable<NavigationRoute.LoadingScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.LoadingScreen>()

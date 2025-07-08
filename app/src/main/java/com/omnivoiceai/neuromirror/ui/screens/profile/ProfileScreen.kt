@@ -5,13 +5,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,30 +47,53 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
+import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
+import com.omnivoiceai.neuromirror.ui.screens.profile.components.EmotionRadar
+import com.omnivoiceai.neuromirror.ui.screens.profile.components.TimelineItem
 import com.omnivoiceai.neuromirror.utils.Logger
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel, navController: NavHostController ,modifier: Modifier = Modifier){
-    Column(
+fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navController: NavHostController ,modifier: Modifier = Modifier){
+    val scroll = rememberScrollState()
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp),
+//            .verticalScroll(scroll),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircleAvatar(image = "", size = Size.Xl)
-        EmptySpacer()
-        LabelWithEdit(viewModel.state.username, viewModel::setUsername, updateOnChange = false, hintText = stringResource(R.string.username))
-        Row {
-            LabelWithEdit(viewModel.state.firstName, viewModel::setFirstName, hintText = stringResource(R.string.first_name))
-            LabelWithEdit(viewModel.state.lastName, viewModel::setLastName, hintText = stringResource(R.string.last_name))
+        item {
+            CircleAvatar(image = "", size = Size.Xl)
+            EmptySpacer()
+            LabelWithEdit(viewModel.state.username, viewModel::setUsername, updateOnChange = false, hintText = stringResource(R.string.username))
+
         }
-        EmptySpacer(height = 32.dp)
-        Text(
-            stringResource(R.string.badges))
-        EmptySpacer(height = 32.dp)
-        Text(stringResource(R.string.emotion_radar))
-        EmptySpacer(height = 32.dp)
-        Text(stringResource(R.string.emotion_timeline))
+        item {
+            Row {
+                LabelWithEdit(viewModel.state.firstName, viewModel::setFirstName, hintText = stringResource(R.string.first_name))
+                LabelWithEdit(viewModel.state.lastName, viewModel::setLastName, hintText = stringResource(R.string.last_name))
+            }
+            EmptySpacer(height = 32.dp)
+            Text(
+                stringResource(R.string.badges))
+            EmptySpacer(height = 32.dp)
+            Text(stringResource(R.string.emotion_radar))
+            EmotionRadar()
+            EmptySpacer(height = 32.dp)
+        }
+
+        item {
+            Text(stringResource(R.string.emotion_timeline))
+        }
+        
+        // Timeline items individuali per performance lazy
+        val filteredNotes = notesState.notes.filter { it.emotionDetected != null }
+        itemsIndexed(filteredNotes) { index, note ->
+            TimelineItem(
+                note = note,
+                isLeft = index % 2 == 0
+            )
+        }
     }
 }
 

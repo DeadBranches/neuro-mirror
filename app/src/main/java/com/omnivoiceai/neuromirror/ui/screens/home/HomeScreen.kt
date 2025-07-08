@@ -44,14 +44,14 @@ fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navControl
     Column(
         modifier= Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             stringResource(R.string.home_page_title),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
 
         )
         EmptySpacer()

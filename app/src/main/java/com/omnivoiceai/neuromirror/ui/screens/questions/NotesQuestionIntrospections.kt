@@ -1,6 +1,5 @@
 package com.omnivoiceai.neuromirror.ui.screens.questions
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,14 +81,14 @@ fun NotesQuestionIntrospections(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             // Note content
             Text(
                 text = "Introspection",
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
             
             Card(
@@ -110,7 +109,7 @@ fun NotesQuestionIntrospections(
             Text(
                 text = "Questions",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             
             noteWithQ.questions.forEach { question ->
@@ -181,7 +180,7 @@ fun NotesQuestionIntrospections(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp)
+                        .padding(vertical = 24.dp)
                 ) {
                     Text("Start Conversation")
                 }

@@ -18,6 +18,7 @@ import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThemeRepository
+import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.EmotionViewModel
@@ -58,6 +59,48 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Create Thread table (using class name as table name)
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `Thread` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `note_id` INTEGER NOT NULL,
+                `note_firebase_id` TEXT,
+                `title` TEXT NOT NULL,
+                `date` INTEGER NOT NULL,
+                `last_updated` INTEGER NOT NULL,
+                `firebase_id` TEXT,
+                `is_synced` INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(`note_id`) REFERENCES `Note`(`id`) ON DELETE CASCADE
+            )
+        """
+        )
+        
+        // Create messages table
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `messages` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `thread_id` INTEGER NOT NULL,
+                `role` TEXT NOT NULL,
+                `content` TEXT NOT NULL,
+                `timestamp` INTEGER NOT NULL,
+                `message_type` TEXT NOT NULL DEFAULT 'TEXT',
+                `firebase_id` TEXT,
+                `is_synced` INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(`thread_id`) REFERENCES `Thread`(`id`) ON DELETE CASCADE
+            )
+        """
+        )
+        
+        // Create indexes for better performance
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_Thread_note_id` ON `Thread` (`note_id`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_messages_thread_id` ON `messages` (`thread_id`)")
+    }
+}
+
 val appModule = module {
     single {
         HttpClient(CIO) {
@@ -81,8 +124,8 @@ val appModule = module {
     }
     single<ChatService> {
         Ktorfit.Builder()
-            .baseUrl("http://192.168.1.226:8000/")
-//            .baseUrl("https://api.ai.digitalnext.business/")
+//            .baseUrl("http://192.168.1.226:8000/")
+            .baseUrl("https://api.ai.digitalnext.business/")
             .httpClient(get<HttpClient>())
             .build()
             .createChatService()
@@ -95,16 +138,19 @@ val appModule = module {
     viewModel { EmotionViewModel(get()) }
     viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get()) }
     viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName))) }
-    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get()) }
+    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get()) }
     single {
         Room.databaseBuilder(
             get(),
             AppDatabase::class.java,
             "note-list"
-        ).addMigrations(MIGRATION_1_2).build()
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+         .fallbackToDestructiveMigration() // Remove this after successful migration
+         .build()
     }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
-    single { QuestionRepository(get<AppDatabase>().questionDao(), get<AppDatabase>().noteDao()) }
+    single { QuestionRepository(get<AppDatabase>().questionDao()) }
+    single { ThreadRepository(get<AppDatabase>().threadDao()) }
     single { ProfileRepository(get()) }
     single { AuthRepository(get(), get()) }
 
