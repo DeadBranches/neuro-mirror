@@ -21,4 +21,7 @@
     <string name="badges">Your Badges</string>
     <string name="emotion_radar">Radar Emotions</string>
     <string name="emotion_timeline">Emotions Timeline</string>
+    <string name="select_image_source">Select Image Source</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

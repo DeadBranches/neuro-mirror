@@ -22,4 +22,7 @@
     <string name="badges">I tuoi badges</string>
     <string name="emotion_radar">Radar delle emozioni</string>
     <string name="emotion_timeline">Timeline delle emozioni</string>
+    <string name="select_image_source">Seleziona sorgente immagine</string>
+    <string name="camera">Fotocamera</string>
+    <string name="gallery">Galleria</string>
 </resources>
