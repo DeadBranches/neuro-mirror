@@ -20,6 +20,7 @@ import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThemeRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
+import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.EmotionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
@@ -157,7 +158,8 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     single { EmotionModel(get()) }
     single { EmotionRepository(get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { RegisterViewModel(get(), get()) }
 
     factory(named("Neuro")) { IntrospectionNeuroImpl(get(), get()) } bind IntrospectionRepository::class
 }

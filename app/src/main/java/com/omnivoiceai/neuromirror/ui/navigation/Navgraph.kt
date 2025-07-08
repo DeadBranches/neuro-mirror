@@ -12,6 +12,7 @@ import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginScreen
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterScreen
+import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatScreen
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.home.HomeScreen
@@ -37,6 +38,7 @@ fun NavGraph(
     modifier: Modifier = Modifier
 ) {
     val loginViewModel = koinViewModel<LoginViewModel>()
+    val registerViewModel = koinViewModel<RegisterViewModel>()
     val currentUser by loginViewModel.currentUser.collectAsStateWithLifecycle()
 
     val startDestination: NavigationRoute =
@@ -62,7 +64,7 @@ fun NavGraph(
             LoginScreen(loginViewModel, navController)
         }
         composable<NavigationRoute.RegisterScreen> {
-            RegisterScreen()
+            RegisterScreen(registerViewModel, navController)
         }
         composable<NavigationRoute.HomeScreen> {
             HomeScreen(

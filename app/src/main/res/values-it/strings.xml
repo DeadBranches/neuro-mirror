@@ -38,23 +38,30 @@
     <string name="positive_vibes">Vibes Positive</string>
     <string name="emotion_tracker">Tracker Emozioni</string>
     <string name="self_care">Cura di Sé</string>
-    
-    <!-- Notification strings -->
     <string name="notification_channel_id">neuromirror_notifications</string>
     <string name="notification_channel_name">Promemoria NeuroMirror</string>
     <string name="notification_channel_description">Promemoria giornalieri e check-in</string>
-    
     <string name="notification_missing_title">Ci manchi!</string>
     <string name="notification_missing_body">È passato un po\' di tempo dalla tua ultima visita. Come ti senti oggi?</string>
-    
     <string name="notification_daily_title">Com\'è andata la giornata?</string>
     <string name="notification_daily_body">Prenditi un momento per riflettere sulle tue emozioni di oggi</string>
-    
     <string name="notification_test_title">Notifica di Test</string>
     <string name="notification_test_body">Questa è una notifica di test da NeuroMirror</string>
-    
     <string name="settings_notifications">Notifiche</string>
     <string name="settings_test_notification">Notifica di Test (60s)</string>
     <string name="settings_test_notification_desc">Invia una notifica di test tra 60 secondi</string>
     <string name="test_notification_scheduled">Notifica di test programmata per 60 secondi</string>
+    <string name="login">Accedi</string>
+    <string name="register">Registrati</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Ripeti Password</string>
+    <string name="login_with_google">Accedi con Google</string>
+    <string name="or">Oppure</string>
+    <string name="not_have_account">Non hai un account?</string>
+    <string name="already_have_account">Hai già un account?</string>
+    <string name="passwords_do_not_match">Le password non corrispondono</string>
+    <string name="please_fill_all_fields">Compila tutti i campi</string>
+    <string name="invalid_email">Formato email non valido</string>
+    <string name="password_min_length">La password deve avere almeno 6 caratteri</string>
 </resources>

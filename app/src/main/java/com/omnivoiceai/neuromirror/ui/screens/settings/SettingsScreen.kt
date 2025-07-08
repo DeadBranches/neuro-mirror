@@ -7,10 +7,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.notifications.NotificationScheduler
+import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTestSettings
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeSettings
@@ -58,7 +57,6 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavController,
         
         NotificationTestSettings(
             onTestNotification = {
-                // Check permission explicitly before scheduling
                 val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     ContextCompat.checkSelfPermission(
                         context,
@@ -97,8 +95,18 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavController,
         Spacer(modifier = Modifier.height(24.dp))
         
         if(currentUser != null) {
-            Button(onClick = { loginViewModel.signOut() }) {
+            Button(onClick = { 
+                loginViewModel.signOut()
+            }) {
                 Text("Logout")
+            }
+        } else {
+            Button(onClick = { 
+                navController.navigate(NavigationRoute.SplashScreen) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }) {
+                Text("Login")
             }
         }
     }
