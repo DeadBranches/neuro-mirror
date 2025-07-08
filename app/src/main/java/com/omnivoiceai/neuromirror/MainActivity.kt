@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
                 val appBarVisible = remember(backStackEntry) {
                     when {
                         backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.LoginScreen>() == true -> false
+                        backStackEntry?.destination?.hasRoute<NavigationRoute.RegisterScreen>() == true -> false
                         else -> true
                     }
                 }
