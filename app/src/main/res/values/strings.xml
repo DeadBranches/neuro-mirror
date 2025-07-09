@@ -63,4 +63,31 @@
     <string name="please_fill_all_fields">Please fill all fields</string>
     <string name="invalid_email">Invalid email format</string>
     <string name="password_min_length">Password must be at least 6 characters</string>
+    <string name="badge_suffix_1">1 time</string>
+    <string name="badge_suffix_n">times</string>
+    <string name="badge_prefix_note">Wrote</string>
+    <string name="badge_prefix_question">Do you generate questions</string>
+    <string name="badge_prefix_message">Do you sent messages</string>
+    <string name="badge_prefix_emotion">Felt</string>
+
+    <!-- Emotion Labels -->
+    <string name="emotion_detected">Emotion detected</string>
+    <string name="emotion_start_introspection">Start Introspection</string>
+    <string name="emotion_continue_introspection">Continue Introspection</string>
+    <string name="emotion_sadness">Sadness</string>
+    <string name="emotion_anger">Anger</string>
+    <string name="emotion_love">Love</string>
+    <string name="emotion_surprise">Surprise</string>
+    <string name="emotion_fear">Fear</string>
+    <string name="emotion_happiness">Happiness</string>
+    <string name="emotion_neutral">Neutral</string>
+    <string name="emotion_disgust">Disgust</string>
+    <string name="emotion_shame">Shame</string>
+    <string name="emotion_guilt">Guilt</string>
+    <string name="emotion_confusion">Confusion</string>
+    <string name="emotion_desire">Desire</string>
+    <string name="emotion_sarcasm">Sarcasm</string>
+
+    <string name="badge_unlocked_message">You unlocked the badge: %1$s</string>
+
 </resources>

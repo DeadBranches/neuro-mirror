@@ -1,17 +1,36 @@
 package com.omnivoiceai.neuromirror.data.database.note
 
+import androidx.annotation.StringRes
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.question.Question
 import java.util.Date
 
 enum class EmotionDetected {
     Sadness, Anger, Love, Surprise, Fear,
     Happiness, Neutral, Disgust, Shame, Guilt,
-    Confusion, Desire, Sarcasm
+    Confusion, Desire, Sarcasm;
+
+    @StringRes
+    fun getLabelRes(): Int = when (this) {
+        Sadness -> R.string.emotion_sadness
+        Anger -> R.string.emotion_anger
+        Love -> R.string.emotion_love
+        Surprise -> R.string.emotion_surprise
+        Fear -> R.string.emotion_fear
+        Happiness -> R.string.emotion_happiness
+        Neutral -> R.string.emotion_neutral
+        Disgust -> R.string.emotion_disgust
+        Shame -> R.string.emotion_shame
+        Guilt -> R.string.emotion_guilt
+        Confusion -> R.string.emotion_confusion
+        Desire -> R.string.emotion_desire
+        Sarcasm -> R.string.emotion_sarcasm
+    }
 }
 
 fun EmotionDetected?.toEmoji(): String {

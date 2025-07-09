@@ -22,10 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
-import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
+import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.BadgeCard
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.CameraIconButton
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.CircleAvatar
@@ -36,12 +37,12 @@ import com.omnivoiceai.neuromirror.ui.screens.profile.components.SeeMoreLink
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.Size
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.TimelineItem
 import com.omnivoiceai.neuromirror.ui.screens.profile.components.UserBadges
-import com.omnivoiceai.neuromirror.ui.screens.profile.components.getAllBadges
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navController: NavHostController, modifier: Modifier = Modifier){
+fun ProfileScreen(viewModel: ProfileViewModel, notesViewModel: NotesViewModel, badgeViewModel: BadgeViewModel, navController: NavHostController, modifier: Modifier = Modifier){
     var showTimelineBottomSheet by remember { mutableStateOf(false) }
     var showBadgesBottomSheet by remember { mutableStateOf(false) }
+    val notes = notesViewModel.state.collectAsStateWithLifecycle()
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -69,13 +70,14 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navContro
             }
             EmptySpacer(height = 32.dp)
             UserBadges(
+                badges = badgeViewModel.badges.collectAsStateWithLifecycle().value,
                 onSeeOthersClick = {
                     showBadgesBottomSheet = true
                 }
             )
             EmptySpacer(height = 32.dp)
             Text(stringResource(R.string.emotion_radar))
-            EmotionRadar()
+            EmotionRadar(notesViewModel = notesViewModel)
             EmptySpacer(height = 32.dp)
         }
 
@@ -83,7 +85,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navContro
             Text(stringResource(R.string.emotion_timeline))
         }
         
-        val filteredNotes = notesState.notes.filter { it.emotionDetected != null }
+        val filteredNotes = notes.value.notes.filter { it.emotionDetected != null }
         // Mostra solo le prime 2 note nella timeline del profilo
         val visibleNotes = filteredNotes.take(5)
         itemsIndexed(visibleNotes) { index, note ->
@@ -112,7 +114,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navContro
         title = stringResource(R.string.emotion_timeline),
         heightFraction = 0.85f // Grande per mostrare molte note
     ) {
-        val filteredNotes = notesState.notes.filter { it.emotionDetected != null }
+        val filteredNotes = notes.value.notes.filter { it.emotionDetected != null }
         
         if (filteredNotes.isEmpty()) {
             Box(
@@ -144,9 +146,9 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesState: NotesState, navContro
         showBottomSheet = showBadgesBottomSheet,
         onDismiss = { showBadgesBottomSheet = false },
         title = stringResource(R.string.all_badges),
-        heightFraction = 0.85f // Grande per mostrare molti badge
+        heightFraction = 0.85f
     ) {
-        val allBadges = getAllBadges()
+        val allBadges = badgeViewModel.badges.collectAsStateWithLifecycle().value
         
         if (allBadges.isEmpty()) {
             Box(

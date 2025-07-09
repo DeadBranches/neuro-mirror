@@ -17,9 +17,9 @@ import com.omnivoiceai.neuromirror.ui.screens.chat.ChatScreen
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.home.HomeScreen
 import com.omnivoiceai.neuromirror.ui.screens.loading.LoadingScreen
-import com.omnivoiceai.neuromirror.ui.screens.note_detail.EmotionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.NoteDetailsScreen
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
+import com.omnivoiceai.neuromirror.ui.screens.profile.BadgeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileScreen
 import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.NotesQuestionIntrospections
@@ -47,7 +47,6 @@ fun NavGraph(
 
     val notesViewModel = koinViewModel<NotesViewModel>(parameters = { parametersOf("Neuro") })
     val notesState by notesViewModel.state.collectAsStateWithLifecycle()
-    val emotionViewModel = koinViewModel<EmotionViewModel>()
     val questionViewModel = koinViewModel<QuestionViewModel>(parameters = { parametersOf("Neuro") })
     val chatViewModel = koinViewModel<ChatViewModel>(parameters = { parametersOf("Neuro") })
     val questionRepository = koinInject<QuestionRepository>()
@@ -80,14 +79,14 @@ fun NavGraph(
             val route = backStackEntry.toRoute<NavigationRoute.NoteDetailsScreen>()
             NoteDetailsScreen(
                 note = notesState.notes.first { it.id == route.id },
-                emotionViewModel = emotionViewModel,
                 questionViewModel = questionViewModel,
                 navController = navController
             )
         }
         composable<NavigationRoute.ProfileScreen> {
             val profileVm = koinViewModel<ProfileViewModel>()
-            ProfileScreen(viewModel = profileVm, notesState = notesState, navController)
+            val badgeViewModel = koinViewModel<BadgeViewModel>()
+            ProfileScreen(viewModel = profileVm, notesViewModel = notesViewModel, badgeViewModel = badgeViewModel,  navController)
         }
         composable<NavigationRoute.LoadingScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.LoadingScreen>()

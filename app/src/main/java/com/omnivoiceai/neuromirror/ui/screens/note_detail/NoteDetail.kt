@@ -18,8 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.Note
 import com.omnivoiceai.neuromirror.data.database.note.toEmoji
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
@@ -29,8 +31,7 @@ import com.omnivoiceai.neuromirror.utils.Logger
 
 @Composable
 fun NoteDetailsScreen(
-    note: Note, 
-    emotionViewModel: EmotionViewModel,
+    note: Note,
     questionViewModel: QuestionViewModel,
     navController: NavController,
     modifier: Modifier = Modifier
@@ -65,14 +66,14 @@ fun NoteDetailsScreen(
                 .fillMaxWidth()
                 .padding(16.dp, 32.dp)
         ) {
-            Text("Emotion detected")
+            Text(stringResource(R.string.emotion_detected))
             currentNote.emotionDetected?.let {
                 Text(
                     it.toEmoji(),
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.padding(8.dp)
                 )
-                Text(it.name)
+                Text(stringResource(it.getLabelRes()))
             }
             if(currentNote.emotionDetected == null)
                 Text("Not detected yet", modifier = Modifier.padding(16.dp, 0.dp))
@@ -86,9 +87,9 @@ fun NoteDetailsScreen(
                 .padding(16.dp, 8.dp)
         ) {
             if (currentNote.isEvaluated) {
-                Text("View Introspection Questions 🧠")
+                Text("${stringResource(R.string.emotion_start_introspection)} 🧠")
             } else {
-                Text("Start Introspection 🧠")
+                Text("${stringResource(R.string.emotion_continue_introspection)} 🧠")
             }
         }
     }

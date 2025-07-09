@@ -11,6 +11,7 @@ import com.omnivoiceai.neuromirror.data.ml.EmotionModel
 import com.omnivoiceai.neuromirror.data.remote.ChatDataSource
 import com.omnivoiceai.neuromirror.data.remote.createChatDataSource
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
+import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionNeuroImpl
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
@@ -24,6 +25,7 @@ import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.EmotionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
+import com.omnivoiceai.neuromirror.ui.screens.profile.BadgeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
@@ -137,7 +139,8 @@ val appModule = module {
     single { ThemeRepository(get()) }
     viewModel { ThemeViewModel(get()) }
     viewModel { EmotionViewModel(get()) }
-    viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get()) }
+    viewModel { BadgeViewModel(get()) }
+    viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get(), get()) }
     viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName))) }
     viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get()) }
     single {
@@ -153,6 +156,7 @@ val appModule = module {
     single { QuestionRepository(get<AppDatabase>().questionDao()) }
     single { ThreadRepository(get<AppDatabase>().threadDao()) }
     single { ProfileRepository(get()) }
+    single { BadgeRepository(get<AppDatabase>().badgeDao()) }
     single { AuthRepository(get(), get()) }
 
     viewModel { ProfileViewModel(get()) }

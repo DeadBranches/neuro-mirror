@@ -28,12 +28,10 @@ class QuestionViewModel(
     private val _questionsWithDetails = MutableStateFlow<List<QuestionWithDetails>>(emptyList())
     val questionsWithDetails = _questionsWithDetails.asStateFlow()
 
-    // Metodo per ottenere una nota con le sue domande
     suspend fun getNoteWithQuestions(noteId: Int): NoteWithQuestions {
         return noteRepository.getNoteWithQuestions(noteId)
     }
     
-    // Metodo per ottenere i dettagli delle domande per una nota specifica
     suspend fun getQuestionsWithDetailsByNoteId(noteId: Int): List<QuestionWithDetails> {
         val questions = questionRepository.getQuestionsWithDetailsByNoteId(noteId)
         _questionsWithDetails.value = questions
@@ -45,39 +43,30 @@ class QuestionViewModel(
         
         viewModelScope.launch {
             try {
-                // Verifica se la nota ha già delle domande
                 val noteWithQuestions = noteRepository.getNoteWithQuestions(note.id)
                 
                 if (noteWithQuestions.questions.isNotEmpty()) {
-                    // Se la nota ha già delle domande, naviga direttamente alla schermata delle domande
                     navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id))
                     return@launch
                 }
                 
-                // Se non ha domande, naviga alla schermata di caricamento
                 navController.navigate(NavigationRoute.LoadingScreen(note.id))
                 
-                // Use the new extension function for type-safe question generation
                 val response = introspectionRepository.sendQuestion(
                     userMessage = note.content,
                     threadId = note.id.toString()
                 )
                 
-                // Parse and save questions using the response data
                 questionRepository.saveQuestions(response.questions, note.id)
                 
-                // Update the note to mark it as evaluated
                 val updatedNote = note.copy(isEvaluated = true)
                 noteRepository.upsert(updatedNote)
                 
-                // Navigate to the questions screen
                 navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
-                    // Remove the loading screen from the back stack
                     popUpTo(NavigationRoute.LoadingScreen(note.id)) { inclusive = true }
                 }
             } catch (e: Exception) {
                 Logger.error("Error generating questions", e)
-                // Navigate back to note details screen on error
                 navController.popBackStack()
             } finally {
                 _isLoading.value = false

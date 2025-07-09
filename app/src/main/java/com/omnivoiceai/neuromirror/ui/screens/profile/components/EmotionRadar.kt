@@ -1,10 +1,17 @@
 package com.omnivoiceai.neuromirror.ui.screens.profile.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -15,63 +22,64 @@ import com.aay.compose.radarChart.model.NetLinesStyle
 import com.aay.compose.radarChart.model.Polygon
 import com.aay.compose.radarChart.model.PolygonStyle
 import com.omnivoiceai.neuromirror.data.database.note.EmotionDetected
+import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
 
 @Composable
-fun EmotionRadar() {
-    val radarLabels = EmotionDetected.entries.map { it -> it.name }
-    val values2 = listOf(120.0, 160.0, 110.0, 112.0, 200.0, 120.0, 145.0, 101.0, 200.0, 150.0, 110.0, 160.0, 132.0)
-    val values = listOf(180.0, 180.0, 165.0, 135.0, 120.0, 150.0, 140.0, 190.0, 200.0, 150.0, 110.0, 160.0, 132.0)
-    val labelsStyle = TextStyle(
-        color = Color.Black,
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.Medium,
-        fontSize = 10.sp
-    )
+fun EmotionRadar(notesViewModel: NotesViewModel) {
+    var emotionCounts by remember { mutableStateOf<List<Pair<EmotionDetected, Int>>>(emptyList()) }
 
-    val scalarValuesStyle = TextStyle(
-        color = Color.Black,
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.Medium,
-        fontSize = 10.sp
-    )
+    LaunchedEffect(Unit) {
+        emotionCounts = notesViewModel.getEmotionCounts()
+    }
 
-    RadarChart(
-        modifier = Modifier.size(350.dp),
-        radarLabels = radarLabels,
-        labelsStyle = labelsStyle,
-        netLinesStyle = NetLinesStyle(
-            netLineColor = Color(0x90ffD3CFD3),
-            netLinesStrokeWidth = 2f,
-            netLinesStrokeCap = StrokeCap.Butt
-        ),
-        scalarSteps = 2,
-        scalarValue = 200.0,
-        scalarValuesStyle = scalarValuesStyle,
-        polygons = listOf(
-            Polygon(
-                values = values,
-                unit = "$",
-                style = PolygonStyle(
-                    fillColor = Color(0xffc2ff86),
-                    fillColorAlpha = 0.5f,
-                    borderColor = Color(0xffe6ffd6),
-                    borderColorAlpha = 0.5f,
-                    borderStrokeWidth = 2f,
-                    borderStrokeCap = StrokeCap.Butt,
-                )
-            ),
-            Polygon(
-                values = values2,
-                unit = "$",
-                style = PolygonStyle(
-                    fillColor = Color(0xffFFDBDE),
-                    fillColorAlpha = 0.5f,
-                    borderColor = Color(0xffFF8B99),
-                    borderColorAlpha = 0.5f,
-                    borderStrokeWidth = 2f,
-                    borderStrokeCap = StrokeCap.Butt
+    if (emotionCounts.isNotEmpty()) {
+        val values = emotionCounts.map { it.second.toDouble() }
+        val maxValue = values.maxOrNull()?.takeIf { it > 0.0 } ?: 1.0
+        val minNormalizedValue = 0.1
+
+        val normalizedValues = values.map { value ->
+            if (value <= 0.0) minNormalizedValue
+            else (value / maxValue) * (1.0 - minNormalizedValue) + minNormalizedValue
+        }
+
+        val labels = emotionCounts.map { it.first }
+
+        Column {
+            RadarChart(
+                modifier = Modifier.size(350.dp),
+                radarLabels = labels.map { stringResource(it.getLabelRes()) },
+                labelsStyle = TextStyle(
+                    color = Color.Black,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 10.sp
+                ),
+                netLinesStyle = NetLinesStyle(
+                    netLineColor = Color(0x30FFFFFF),
+                    netLinesStrokeWidth = 1f,
+                    netLinesStrokeCap = StrokeCap.Butt
+                ),
+                scalarSteps = 4,
+                scalarValue = 1.0,
+                scalarValuesStyle = TextStyle(
+                    color = Color.Transparent,
+                    fontSize = 0.sp
+                ),
+                polygons = listOf(
+                    Polygon(
+                        values = normalizedValues,
+                        unit = "",
+                        style = PolygonStyle(
+                            fillColor = Color(0xFFc2ff86),
+                            fillColorAlpha = 0.9f,
+                            borderColor = Color(0xFF7cb342),
+                            borderColorAlpha = 1f,
+                            borderStrokeWidth = 2f,
+                            borderStrokeCap = StrokeCap.Butt
+                        )
+                    )
                 )
             )
-        )
-    )
+        }
+    }
 }

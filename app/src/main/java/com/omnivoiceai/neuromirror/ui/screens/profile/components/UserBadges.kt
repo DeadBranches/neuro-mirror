@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Fireplace
 import androidx.compose.material.icons.outlined.Psychology
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,19 +33,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.omnivoiceai.neuromirror.R
-
-data class Badge(
-    val id: String,
-    val title: String,
-    val icon: ImageVector,
-    val backgroundColor: androidx.compose.ui.graphics.Color,
-    val iconColor: androidx.compose.ui.graphics.Color,
-    val isUnlocked: Boolean = true
-)
+import com.omnivoiceai.neuromirror.data.database.badge.Badge
+import com.omnivoiceai.neuromirror.data.database.badge.BadgeCategory
+import com.omnivoiceai.neuromirror.data.database.note.EmotionDetected
+import com.omnivoiceai.neuromirror.data.database.note.toEmoji
+import com.omnivoiceai.neuromirror.utils.getBadgeColorForLevel
 
 @Composable
 fun UserBadges(
-    badges: List<Badge> = getDefaultBadges(),
+    badges: List<Badge>,
     onSeeOthersClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -61,41 +55,31 @@ fun UserBadges(
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
-        // Mostra solo i primi 8 badge
+
         val visibleBadges = badges.take(8)
-        
-        // Prima riga (4 badge)
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
         ) {
             visibleBadges.take(4).forEach { badge ->
-                BadgeCard(
-                    badge = badge,
-                    modifier = Modifier.weight(1f)
-                )
+                BadgeCard(badge)
             }
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
         ) {
             visibleBadges.drop(4).take(4).forEach { badge ->
-                BadgeCard(
-                    badge = badge,
-                    modifier = Modifier.weight(1f)
-                )
+                BadgeCard(badge)
             }
         }
-        
+
         if (badges.size > 8) {
-            SeeMoreLink(
-                onClick = onSeeOthersClick
-            )
+            SeeMoreLink(onClick = onSeeOthersClick)
         }
     }
 }
@@ -105,6 +89,10 @@ fun BadgeCard(
     badge: Badge,
     modifier: Modifier = Modifier
 ) {
+    val icon = getBadgeIcon(badge)
+    val bgColor = getBadgeColorForLevel(badge.level)
+    val label = getBadgeLabel(badge)
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,7 +101,7 @@ fun BadgeCard(
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
-                .background(badge.backgroundColor)
+                .background(if (badge.isUnlocked) bgColor else Color.Gray)
                 .border(
                     width = 2.dp,
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
@@ -121,18 +109,31 @@ fun BadgeCard(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = badge.icon,
-                contentDescription = badge.title,
-                tint = badge.iconColor,
-                modifier = Modifier.size(28.dp)
-            )
+            if (badge.category == BadgeCategory.EMOTION) {
+                val emotion = EmotionDetected.entries.firstOrNull {
+                    badge.badgeKey.contains(it.name, ignoreCase = true)
+                }
+                Text(
+                    text = emotion?.toEmoji() ?: "❓",
+                    fontSize = 22.sp,
+                    modifier = Modifier.alpha(if (badge.isUnlocked) 1f else 0.3f)
+                )
+            } else {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = if (badge.isUnlocked) Color.White else Color.LightGray,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .alpha(if (badge.isUnlocked) 1f else 0.3f)
+                )
+            }
         }
-        
+
         Spacer(modifier = Modifier.height(6.dp))
-        
+
         Text(
-            text = badge.title,
+            text = label,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
@@ -143,79 +144,42 @@ fun BadgeCard(
     }
 }
 
-// Dati base dei badge senza testi per evitare duplicazione
-private data class BadgeData(
-    val id: String,
-    val stringRes: Int,
-    val icon: ImageVector,
-    val backgroundColor: androidx.compose.ui.graphics.Color
-)
+@Composable
+fun getBadgeLabel(badge: Badge): String {
+    val parts = badge.badgeKey.split("_")
+    if (parts.size < 2) return badge.badgeKey
 
-private fun getBadgeData(): List<BadgeData> {
-    return listOf(
-        BadgeData(
-            id = "first_note",
-            stringRes = R.string.first_note,
-            icon = Icons.Outlined.Create,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFF4CAF50)
-        ),
-        BadgeData(
-            id = "streak_3",
-            stringRes = R.string.streak_of_3,
-            icon = Icons.Outlined.Fireplace,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFFFF9800)
-        ),
-        BadgeData(
-            id = "week_warrior",
-            stringRes = R.string.week_warrior,
-            icon = Icons.Outlined.EmojiEvents,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFF2196F3)
-        ),
-        BadgeData(
-            id = "reflection_master",
-            stringRes = R.string.reflection_master,
-            icon = Icons.Outlined.Star,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFF9C27B0)
-        ),
-        BadgeData(
-            id = "mindful_moment",
-            stringRes = R.string.mindful_moment,
-            icon = Icons.Outlined.Psychology,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFF607D8B)
-        ),
-        BadgeData(
-            id = "positive_vibes",
-            stringRes = R.string.positive_vibes,
-            icon = Icons.Outlined.WbSunny,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFFFFC107)
-        ),
-        BadgeData(
-            id = "emotion_tracker",
-            stringRes = R.string.emotion_tracker,
-            icon = Icons.Outlined.Timeline,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFF00BCD4)
-        ),
-        BadgeData(
-            id = "self_care",
-            stringRes = R.string.self_care,
-            icon = Icons.Outlined.Favorite,
-            backgroundColor = androidx.compose.ui.graphics.Color(0xFFE91E63)
-        )
-    )
+    val category = badge.category
+    val subType = parts.getOrNull(1)?.lowercase()?.replaceFirstChar { it.uppercaseChar() } ?: ""
+    val count = parts.lastOrNull()?.toIntOrNull()
+
+    val suffix = when (count) {
+        1 -> stringResource(R.string.badge_suffix_1)
+        null -> ""
+        else -> "$count ${stringResource(R.string.badge_suffix_n)}"
+    }
+
+    return when (category) {
+        BadgeCategory.NOTE -> "${stringResource(R.string.badge_prefix_note)} $suffix"
+        BadgeCategory.QUESTION -> "${stringResource(R.string.badge_prefix_question)} $suffix"
+        BadgeCategory.MESSAGE -> "${stringResource(R.string.badge_prefix_message)} $suffix"
+        BadgeCategory.EMOTION -> {
+            val emotion = EmotionDetected.entries.firstOrNull {
+                it.name.equals(subType, ignoreCase = true)
+            }
+            val emotionStr = emotion?.getLabelRes()?.let { stringResource(it) } ?: subType
+            "${stringResource(R.string.badge_prefix_emotion)} $emotionStr $suffix"
+        }
+    }.trim()
 }
 
-@Composable
-fun getAllBadges(): List<Badge> {
-    return getBadgeData().map { badgeData ->
-        Badge(
-            id = badgeData.id,
-            title = stringResource(badgeData.stringRes),
-            icon = badgeData.icon,
-            backgroundColor = badgeData.backgroundColor,
-            iconColor = androidx.compose.ui.graphics.Color.White
-        )
+
+
+fun getBadgeIcon(badge: Badge): ImageVector {
+    return when (badge.category) {
+        BadgeCategory.NOTE -> Icons.Outlined.Create
+        BadgeCategory.EMOTION -> Icons.Outlined.Psychology
+        BadgeCategory.MESSAGE ->  Icons.Outlined.WbSunny
+        BadgeCategory.QUESTION -> Icons.Outlined.Favorite
     }
 }
-
-@Composable
-fun getDefaultBadges(): List<Badge> = getAllBadges() 

@@ -64,4 +64,31 @@
     <string name="please_fill_all_fields">Compila tutti i campi</string>
     <string name="invalid_email">Formato email non valido</string>
     <string name="password_min_length">La password deve avere almeno 6 caratteri</string>
+    <string name="badge_suffix_1">1 volta</string>
+    <string name="badge_suffix_n">volte</string>
+    <string name="badge_prefix_note">Scritto note</string>
+    <string name="badge_prefix_question">Generato domande</string>
+    <string name="badge_prefix_message">Inviati messaggi</string>
+    <string name="badge_prefix_emotion">Rilevata l\'emozione</string>
+
+    <!-- Etichette Emozioni -->
+    <string name="emotion_detected">Emozione rilevata</string>
+    <string name="emotion_start_introspection">Inizia introspezione</string>
+    <string name="emotion_continue_introspection">Continua introspezione</string>
+    <string name="emotion_sadness">Tristezza</string>
+    <string name="emotion_anger">Rabbia</string>
+    <string name="emotion_love">Amore</string>
+    <string name="emotion_surprise">Sorpresa</string>
+    <string name="emotion_fear">Paura</string>
+    <string name="emotion_happiness">Felicità</string>
+    <string name="emotion_neutral">Neutrale</string>
+    <string name="emotion_disgust">Disgusto</string>
+    <string name="emotion_shame">Vergogna</string>
+    <string name="emotion_guilt">Senso di colpa</string>
+    <string name="emotion_confusion">Confusione</string>
+    <string name="emotion_desire">Desiderio</string>
+    <string name="emotion_sarcasm">Sarcasmo</string>
+
+    <string name="badge_unlocked_message">Hai sbloccato il badge: %1$s</string>
+
 </resources>

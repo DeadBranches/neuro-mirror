@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.omnivoiceai.neuromirror.ui.components.layout.AppBar
 import com.omnivoiceai.neuromirror.ui.components.layout.fab.Fab
+import com.omnivoiceai.neuromirror.ui.components.notifications.HandleUiEvents
 import com.omnivoiceai.neuromirror.ui.navigation.NavGraph
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.navigation.hasRoute
@@ -56,6 +59,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            HandleUiEvents(snackbarHostState)
+
 
             NeuroMirrorTheme(
                 darkTheme = themeState.isDarkTheme
@@ -83,7 +90,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = { if(appBarVisible) AppBar(navController) },
                     modifier = Modifier.fillMaxSize(),
-                    floatingActionButton = { if(fabVisible) Fab(navController = navController) }
+                    floatingActionButton = { if(fabVisible) Fab(navController = navController) },
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
                 ) { innerPadding ->
                     NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
                 }

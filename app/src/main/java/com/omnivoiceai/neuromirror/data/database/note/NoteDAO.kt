@@ -2,11 +2,8 @@ package com.omnivoiceai.neuromirror.data.database.note
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -29,4 +26,11 @@ interface NoteDao {
 
     @Query("DELETE FROM question WHERE note_id = :noteId")
     suspend fun deleteQuestionsByNoteId(noteId: Int)
+
+    @Query("SELECT COUNT(*) FROM note")
+    suspend fun countNotes(): Int
+
+    @Query("SELECT COUNT(*) FROM note WHERE emotion_detected = :emotion")
+    suspend fun countByEmotion(emotion: String): Int
+
 }
