@@ -145,7 +145,7 @@ fun BadgeCard(
 }
 
 @Composable
-fun getBadgeLabel(badge: Badge): String {
+private fun getBadgeLabel(badge: Badge): String {
     val parts = badge.badgeKey.split("_")
     if (parts.size < 2) return badge.badgeKey
 
@@ -173,9 +173,7 @@ fun getBadgeLabel(badge: Badge): String {
     }.trim()
 }
 
-
-
-fun getBadgeIcon(badge: Badge): ImageVector {
+private fun getBadgeIcon(badge: Badge): ImageVector {
     return when (badge.category) {
         BadgeCategory.NOTE -> Icons.Outlined.Create
         BadgeCategory.EMOTION -> Icons.Outlined.Psychology

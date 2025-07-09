@@ -2,6 +2,7 @@ package com.omnivoiceai.neuromirror.ui.screens.profile.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,8 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aay.compose.radarChart.RadarChart
@@ -48,11 +47,8 @@ fun EmotionRadar(notesViewModel: NotesViewModel) {
             RadarChart(
                 modifier = Modifier.size(350.dp),
                 radarLabels = labels.map { stringResource(it.getLabelRes()) },
-                labelsStyle = TextStyle(
-                    color = Color.Black,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 10.sp
+                labelsStyle = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
                 ),
                 netLinesStyle = NetLinesStyle(
                     netLineColor = Color(0x30FFFFFF),
