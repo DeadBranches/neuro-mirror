@@ -86,8 +86,13 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesViewModel: NotesViewModel, b
         }
         
         val filteredNotes = notes.value.notes.filter { it.emotionDetected != null }
-        // Mostra solo le prime 2 note nella timeline del profilo
         val visibleNotes = filteredNotes.take(5)
+        if(visibleNotes.isEmpty()) {
+            item {
+                Text(stringResource(R.string.emotion_timeline_empty), modifier = Modifier.padding(vertical = 16.dp))
+            }
+        }
+
         itemsIndexed(visibleNotes) { index, note ->
             TimelineItem(
                 note = note,

@@ -20,17 +20,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.notifications.NotificationScheduler
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTestSettings
+import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeSettings
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
 @Composable
-fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavController, themeViewModel: ThemeViewModel){
+fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostController, themeViewModel: ThemeViewModel){
     val themeState by themeViewModel.state.collectAsStateWithLifecycle()
     val currentUser by loginViewModel.currentUser.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -40,6 +41,7 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavController,
             .fillMaxSize()
             .padding(horizontal = 16.dp, 8.dp)
     ){
+        SettingLineItem(stringResource(R.string.settings_page_theme_title), NavigationRoute.LoginScreen, navController = navController)
         Text(
             stringResource(R.string.settings_page_theme_title),
             style = MaterialTheme.typography.titleLarge

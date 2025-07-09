@@ -19,8 +19,10 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="badges">Your Badges</string>
+    <string name="badges_empty">Start writing notes to unlock badges</string>
     <string name="emotion_radar">Radar Emotions</string>
     <string name="emotion_timeline">Emotions Timeline</string>
+    <string name="emotion_timeline_empty">No notes found</string>
     <string name="select_image_source">Select Image Source</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>

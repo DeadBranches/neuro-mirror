@@ -20,6 +20,7 @@
     <string name="first_name">Nome</string>
     <string name="last_name">Cognome</string>
     <string name="badges">I tuoi badges</string>
+    <string name="badges_empty">Inizia a scrivere note per sbloccare badges</string>
     <string name="emotion_radar">Radar delle emozioni</string>
     <string name="emotion_timeline">Timeline delle emozioni</string>
     <string name="select_image_source">Seleziona sorgente immagine</string>
@@ -37,6 +38,7 @@
     <string name="mindful_moment">Momento Mindful</string>
     <string name="positive_vibes">Vibes Positive</string>
     <string name="emotion_tracker">Tracker Emozioni</string>
+    <string name="emotion_timeline_empty">Nessuna nota trovata</string>
     <string name="self_care">Cura di Sé</string>
     <string name="notification_channel_id">neuromirror_notifications</string>
     <string name="notification_channel_name">Promemoria NeuroMirror</string>

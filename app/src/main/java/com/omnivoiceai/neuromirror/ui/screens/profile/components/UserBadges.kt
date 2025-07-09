@@ -58,6 +58,10 @@ fun UserBadges(
 
         val visibleBadges = badges.take(8)
 
+        if(visibleBadges.isEmpty()) {
+                Text(stringResource(R.string.badges_empty), modifier = Modifier.padding(top = 8.dp))
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
