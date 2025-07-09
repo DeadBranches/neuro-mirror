@@ -56,8 +56,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.auth.api.identity.Identity
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 
@@ -76,20 +75,16 @@ fun LoginScreen(
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
+        contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
-        val data = result.data
-        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
-            val account = task.getResult(ApiException::class.java)
-                ?: throw IllegalStateException("Account Google nullo")
-            val idToken = account.idToken
+            val credential = Identity.getSignInClient(context)
+                .getSignInCredentialFromIntent(result.data)
+            val idToken = credential.googleIdToken
                 ?: throw IllegalStateException("ID token non presente")
             viewModel.signInWithGoogle(idToken)
         } catch (e: Exception) {
-            Toast
-                .makeText(context, "Google sign-in fallito: ${e.localizedMessage}", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(context, "Google sign-in fallito: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -244,8 +239,19 @@ fun LoginScreen(
 
                 OutlinedButton(
                     onClick = {
-                        val client = viewModel.getGoogleSignInRequest()
-                        launcher.launch(client.signInIntent)
+                        val client = viewModel.getOneTapClient()
+                        val request = viewModel.getSignInRequest()
+
+                        client.beginSignIn(request)
+                            .addOnSuccessListener { result ->
+                                val intentSenderRequest = androidx.activity.result.IntentSenderRequest
+                                    .Builder(result.pendingIntent.intentSender)
+                                    .build()
+                                launcher.launch(intentSenderRequest)
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(context, "One Tap non disponibile: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = loginState !is LoginState.Loading

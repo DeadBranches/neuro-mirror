@@ -2,7 +2,8 @@ package com.omnivoiceai.neuromirror.ui.screens.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
@@ -12,10 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 sealed class RegisterState {
-    data object Idle    : RegisterState()
+    data object Idle : RegisterState()
     data object Loading : RegisterState()
     data class Success(val user: FirebaseUser) : RegisterState()
-    data class Error  (val message: String)  : RegisterState()
+    data class Error(val message: String) : RegisterState()
 }
 
 class RegisterViewModel(
@@ -53,8 +54,10 @@ class RegisterViewModel(
         }
     }
 
-    fun getGoogleSignInRequest(): GoogleSignInClient =
-        authRepository.getGoogleSignInClient()
+    // ✅ Metodi corretti per Identity API (One Tap)
+    fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
+
+    fun getSignInRequest(): BeginSignInRequest = authRepository.getSignInRequest()
 
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
@@ -75,13 +78,13 @@ class RegisterViewModel(
         try {
             val displayName = user.displayName ?: ""
             val email = user.email ?: ""
-            
+
             val username = if (displayName.isNotEmpty()) displayName else email.substringBefore("@")
-            
+
             val nameParts = displayName.split(" ", limit = 2)
             val firstName = nameParts.getOrNull(0) ?: ""
             val lastName = nameParts.getOrNull(1) ?: ""
-            
+
             if (username.isNotEmpty()) {
                 profileRepository.setUsername(username)
             }
@@ -91,7 +94,7 @@ class RegisterViewModel(
             if (lastName.isNotEmpty()) {
                 profileRepository.setLastName(lastName)
             }
-            
+
             user.photoUrl?.toString()?.let { imageUrl ->
                 profileRepository.setImageUrl(imageUrl)
             }
@@ -99,4 +102,4 @@ class RegisterViewModel(
             e.printStackTrace()
         }
     }
-} 
+}

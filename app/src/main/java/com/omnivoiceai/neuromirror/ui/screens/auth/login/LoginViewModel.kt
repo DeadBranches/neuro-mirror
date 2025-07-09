@@ -2,7 +2,7 @@ package com.omnivoiceai.neuromirror.ui.screens.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
@@ -57,8 +57,10 @@ class LoginViewModel(
         }
     }
 
-    fun getGoogleSignInRequest(): GoogleSignInClient =
-        authRepository.getGoogleSignInClient()
+    fun getSignInRequest() = authRepository.getSignInRequest()
+
+    fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
+
 
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
