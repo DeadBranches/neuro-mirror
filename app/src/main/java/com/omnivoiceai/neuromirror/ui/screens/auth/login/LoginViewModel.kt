@@ -57,10 +57,10 @@ class LoginViewModel(
         }
     }
 
+    fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
     fun getSignInRequest() = authRepository.getSignInRequest()
 
-    fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
-
+    fun getGoogleSignInIntent() = authRepository.getGoogleSignInIntent()
 
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
@@ -81,20 +81,20 @@ class LoginViewModel(
         try {
             val displayName = user.displayName ?: ""
             val email = user.email ?: ""
-            
+
             if (displayName.isNotEmpty()) {
                 val nameParts = displayName.split(" ", limit = 2)
                 val firstName = nameParts.getOrNull(0) ?: ""
                 val lastName = nameParts.getOrNull(1) ?: ""
-                
+
                 val currentUsername = profileRepository.username.first()
                 if (currentUsername.isEmpty()) {
                     profileRepository.setUsername(displayName)
                 }
-                
+
                 val currentFirstName = profileRepository.firstName.first()
                 val currentLastName = profileRepository.lastName.first()
-                
+
                 if (currentFirstName.isEmpty() && firstName.isNotEmpty()) {
                     profileRepository.setFirstName(firstName)
                 }
@@ -107,7 +107,7 @@ class LoginViewModel(
                     profileRepository.setUsername(email.substringBefore("@"))
                 }
             }
-            
+
             user.photoUrl?.toString()?.let { imageUrl ->
                 val currentImageUrl = profileRepository.imageUrl.first()
                 if (currentImageUrl.isEmpty()) {

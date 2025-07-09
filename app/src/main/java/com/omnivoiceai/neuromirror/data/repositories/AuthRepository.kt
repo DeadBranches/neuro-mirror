@@ -1,9 +1,13 @@
 package com.omnivoiceai.neuromirror.data.repositories
 
 import android.content.Context
+import android.content.Intent
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -28,11 +32,19 @@ class AuthRepository(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
                 .setServerClientId(context.getString(R.string.default_web_client_id))
-                .setFilterByAuthorizedAccounts(false)
+                .setFilterByAuthorizedAccounts(false) // Mostra anche account non salvati
                 .build()
         )
-        .setAutoSelectEnabled(true)
+        .setAutoSelectEnabled(false)
         .build()
+
+    private val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(
+        context,
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    )
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
@@ -87,9 +99,12 @@ class AuthRepository(
 
     fun getSignInRequest(): BeginSignInRequest = signInRequest
 
+    fun getGoogleSignInIntent(): Intent = googleSignInClient.signInIntent
+
     fun signOut() {
         auth.signOut()
         oneTapClient.signOut()
+        googleSignInClient.signOut()
     }
 
     fun isSignedIn(): Boolean = auth.currentUser != null

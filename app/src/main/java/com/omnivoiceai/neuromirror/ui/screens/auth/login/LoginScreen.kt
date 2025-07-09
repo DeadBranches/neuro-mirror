@@ -1,8 +1,10 @@
 package com.omnivoiceai.neuromirror.ui.screens.auth.login
 
+import android.app.Activity
 import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +59,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 
@@ -87,6 +91,24 @@ fun LoginScreen(
             Toast.makeText(context, "Google sign-in fallito: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
+
+    val fallbackLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    account?.idToken?.let { idToken ->
+                        viewModel.signInWithGoogle(idToken)
+                    }
+                } catch (e: ApiException) {
+                }
+            }
+        }
+    )
+
+
 
     fun validateForm(): Boolean {
         emailError = ""
@@ -244,13 +266,12 @@ fun LoginScreen(
 
                         client.beginSignIn(request)
                             .addOnSuccessListener { result ->
-                                val intentSenderRequest = androidx.activity.result.IntentSenderRequest
-                                    .Builder(result.pendingIntent.intentSender)
-                                    .build()
+                                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
                                 launcher.launch(intentSenderRequest)
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(context, "One Tap non disponibile: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                val fallbackIntent = viewModel.getGoogleSignInIntent()
+                                fallbackLauncher.launch(fallbackIntent)
                             }
                     },
                     modifier = Modifier.fillMaxWidth(),
