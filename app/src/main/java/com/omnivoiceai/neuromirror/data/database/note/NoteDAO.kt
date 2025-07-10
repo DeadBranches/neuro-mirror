@@ -2,6 +2,8 @@ package com.omnivoiceai.neuromirror.data.database.note
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -21,6 +23,9 @@ interface NoteDao {
     @Query("SELECT * FROM note ORDER BY created_at DESC")
     fun getAll(): Flow<List<Note>>
 
+    @Query("SELECT * FROM note ORDER BY created_at DESC")
+    fun getAllRaw(): List<Note>
+
 
     @Upsert
     suspend fun upsert(note: Note)
@@ -36,5 +41,8 @@ interface NoteDao {
 
     @Query("SELECT COUNT(*) FROM note WHERE emotion_detected = :emotion")
     suspend fun countByEmotion(emotion: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(notes: List<Note>)
 
 }

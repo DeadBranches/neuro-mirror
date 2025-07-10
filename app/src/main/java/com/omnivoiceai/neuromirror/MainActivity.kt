@@ -115,11 +115,6 @@ class MainActivity : ComponentActivity() {
         super.attachBaseContext(updatedContext)
     }
 
-    fun getSavedLanguage(context: Context): String {
-        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        return prefs.getString("language", "en") ?: "en"
-    }
-
 
 //    override fun onStart() {
 //        super.onStart()

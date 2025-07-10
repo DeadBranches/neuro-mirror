@@ -31,6 +31,7 @@ import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.language.LanguageViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
+import com.omnivoiceai.neuromirror.worker.ExportImportWorker
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -40,6 +41,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -169,5 +171,6 @@ val appModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
 
+    workerOf(::ExportImportWorker)
     factory(named("Neuro")) { IntrospectionNeuroImpl(get(), get()) } bind IntrospectionRepository::class
 }

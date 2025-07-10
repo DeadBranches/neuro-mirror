@@ -5,20 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.data.database.note.Note
-import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
 import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestionsAndAnswers
-import com.omnivoiceai.neuromirror.data.database.question.QuestionWithDetails
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class QuestionViewModel(
@@ -28,10 +23,6 @@ class QuestionViewModel(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private val _questionsWithDetails = MutableStateFlow<List<QuestionWithDetails>>(emptyList())
-    val questionsWithDetails: StateFlow<List<QuestionWithDetails>> = _questionsWithDetails.asStateFlow()
 
     private val _noteWithQuestions = MutableStateFlow<NoteWithQuestionsAndAnswers?>(null)
     val noteWithQuestions: StateFlow<NoteWithQuestionsAndAnswers?> = _noteWithQuestions.asStateFlow()
@@ -44,28 +35,6 @@ class QuestionViewModel(
                 Logger.error("Error loading note with questions", e)
             }
         }
-    }
-
-    val isNoteEvaluated: StateFlow<Boolean> = _noteWithQuestions
-        .map { note ->
-            note?.questions?.any { q ->
-                val a = q.answer
-                a?.answerText?.isNotBlank() == true ||
-                        a?.selectedOptionIndex != null ||
-                        a?.selectedOptionText?.isNotBlank() == true
-            } ?: false
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
-
-    suspend fun getNoteWithQuestions(noteId: Int): NoteWithQuestions {
-        return noteRepository.getNoteWithQuestions(noteId)
-    }
-
-    suspend fun getQuestionsWithDetailsByNoteId(noteId: Int): List<QuestionWithDetails> {
-        val questions = questionRepository.getQuestionsWithDetailsByNoteId(noteId)
-        _questionsWithDetails.value = questions
-        return questions
     }
 
     fun generateQuestions(context: Context, note: Note, navController: NavController) {

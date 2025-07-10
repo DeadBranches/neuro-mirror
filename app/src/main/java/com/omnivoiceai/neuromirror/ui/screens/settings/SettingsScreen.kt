@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
+import com.omnivoiceai.neuromirror.ui.screens.settings.components.BackupButtons
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
@@ -47,6 +48,8 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         HorizontalDivider()
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        BackupButtons()
         
         if(currentUser != null) {
             Button(onClick = { 

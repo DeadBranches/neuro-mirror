@@ -2,6 +2,7 @@ package com.omnivoiceai.neuromirror.utils
 
 import androidx.compose.ui.graphics.Color
 import com.omnivoiceai.neuromirror.data.database.badge.Badge
+import com.omnivoiceai.neuromirror.domain.model.LoginEventType
 import com.omnivoiceai.neuromirror.ui.events.UIEvent
 import com.omnivoiceai.neuromirror.ui.events.UiNotificationData
 import com.omnivoiceai.neuromirror.ui.events.UiNotificationType
@@ -20,17 +21,16 @@ fun UIEvent.toUiNotification(): UiNotificationData? {
             UiNotificationData(message, icon, color)
         }
 
-        is UIEvent.LoginSuccess -> UiNotificationData("Login effettuato!", "✅", Color(0xFF4CAF50))
-        is UIEvent.Logout -> UiNotificationData("Logout effettuato", "🚪", Color.Gray)
-
         is UIEvent.BadgeUnlocked -> UiNotificationData(
-            message = "Hai sbloccato un badge: ${badge.badgeKey}",
+            message = badge,
             emoji = emoji ?: "🎖️",
             color = Color(0xFF4CAF50)
         )
+
         else -> null
     }
 }
+
 
 
 
@@ -41,7 +41,7 @@ object UiEventBus {
     fun notify(event: UIEvent) = _events.tryEmit(event)
 
     fun showNotification(
-        message: String,
+        message: Any, // 🔁 ora è Any
         type: UiNotificationType = UiNotificationType.Info,
         icon: String? = null
     ) {
@@ -52,12 +52,15 @@ object UiEventBus {
         notify(UIEvent.BadgeUnlocked(badge, emotionEmojy))
     }
 
-
     fun showLoginSuccess() {
-        showNotification("Login effettuato!", UiNotificationType.Success)
+        showNotification(LoginEventType.Success, UiNotificationType.Success, "✅")
+    }
+
+    fun showLogout() {
+        showNotification(LoginEventType.Logout, UiNotificationType.Info, "🚪")
     }
 
     fun showError(message: String) {
-        showNotification(message, UiNotificationType.Error, "")
+        showNotification(message, UiNotificationType.Error, "❌")
     }
 }

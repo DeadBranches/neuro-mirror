@@ -50,7 +50,7 @@ fun NoteDetailsScreen(
 
     noteWithQuestions?.let { data ->
         val note = data.note
-        val isEvaluated by questionViewModel.isNoteEvaluated.collectAsState()
+        val isEvaluated = noteWithQuestions?.questions?.isNotEmpty() == true
 
         Column(
             modifier = modifier
@@ -98,7 +98,7 @@ fun NoteDetailsScreen(
                     .padding(vertical = 16.dp)
             ) {
                 Text(
-                    text = if (isEvaluated)
+                    text = if (!isEvaluated)
                         stringResource(R.string.emotion_start_introspection)
                     else
                         stringResource(R.string.emotion_continue_introspection)

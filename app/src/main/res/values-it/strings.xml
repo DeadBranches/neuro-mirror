@@ -71,7 +71,7 @@
     <string name="badge_prefix_note">Scritto note</string>
     <string name="badge_prefix_question">Generato domande</string>
     <string name="badge_prefix_message">Inviati messaggi</string>
-    <string name="badge_prefix_emotion">Rilevata l\'emozione</string>
+    <string name="badge_prefix_emotion">Rilevata:</string>
 
     <!-- Etichette Emozioni -->
     <string name="emotion_detected">Emozione rilevata</string>
@@ -95,6 +95,8 @@
     <string name="badge_unlocked_message">Hai sbloccato il badge: %1$s</string>
     <string name="question">Domande</string>
     <string name="language">Lingua</string>
-    <string name="welcome_chat">Scrivi i tuoi pensieri e sentimenti...</string>
+    <string name="welcome_chat">Scrivi i tuoi pensieri e sentimenti…</string>
+    <string name="login_success">Login effettuato!</string>
+    <string name="logout_success">Logout effettuato!</string>
 
 </resources>
