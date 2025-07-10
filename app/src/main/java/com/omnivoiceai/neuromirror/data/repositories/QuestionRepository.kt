@@ -87,4 +87,18 @@ class QuestionRepository(private val questionDao: QuestionDAO) {
             throw Exception("Failed to save questions: ${e.message}")
         }
     }
+
+    suspend fun isNoteEvaluated(noteId: Int): Boolean {
+        val questions = getQuestionsWithDetailsByNoteId(noteId)
+        for (q in questions) {
+            val answer = getLatestAnswerForQuestion(q.question.id)
+            if (answer != null &&
+                (answer.answerText?.isNotBlank() == true || answer.selectedOptionIndex != null)
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+
 } 

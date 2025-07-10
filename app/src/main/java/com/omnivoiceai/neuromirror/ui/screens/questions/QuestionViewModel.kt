@@ -13,6 +13,7 @@ import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -23,15 +24,28 @@ class QuestionViewModel(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
-    
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _questionsWithDetails = MutableStateFlow<List<QuestionWithDetails>>(emptyList())
-    val questionsWithDetails = _questionsWithDetails.asStateFlow()
+    val questionsWithDetails: StateFlow<List<QuestionWithDetails>> = _questionsWithDetails.asStateFlow()
+
+    private val _noteWithQuestions = MutableStateFlow<NoteWithQuestions?>(null)
+    val noteWithQuestions: StateFlow<NoteWithQuestions?> = _noteWithQuestions.asStateFlow()
+
+    fun loadNoteDetails(noteId: Int) {
+        viewModelScope.launch {
+            try {
+                _noteWithQuestions.value = noteRepository.getNoteWithQuestions(noteId)
+            } catch (e: Exception) {
+                Logger.error("Error loading note with questions", e)
+            }
+        }
+    }
 
     suspend fun getNoteWithQuestions(noteId: Int): NoteWithQuestions {
         return noteRepository.getNoteWithQuestions(noteId)
     }
-    
+
     suspend fun getQuestionsWithDetailsByNoteId(noteId: Int): List<QuestionWithDetails> {
         val questions = questionRepository.getQuestionsWithDetailsByNoteId(noteId)
         _questionsWithDetails.value = questions
@@ -40,28 +54,28 @@ class QuestionViewModel(
 
     fun generateQuestions(context: Context, note: Note, navController: NavController) {
         _isLoading.value = true
-        
+
         viewModelScope.launch {
             try {
                 val noteWithQuestions = noteRepository.getNoteWithQuestions(note.id)
-                
+
                 if (noteWithQuestions.questions.isNotEmpty()) {
                     navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id))
                     return@launch
                 }
-                
+
                 navController.navigate(NavigationRoute.LoadingScreen(note.id))
-                
+
                 val response = introspectionRepository.sendQuestion(
                     userMessage = note.content,
                     threadId = note.id.toString()
                 )
-                
+
                 questionRepository.saveQuestions(response.questions, note.id)
-                
+
                 val updatedNote = note.copy(isEvaluated = true)
                 noteRepository.upsert(updatedNote)
-                
+
                 navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
                     popUpTo(NavigationRoute.LoadingScreen(note.id)) { inclusive = true }
                 }
@@ -73,4 +87,14 @@ class QuestionViewModel(
             }
         }
     }
-} 
+
+    private val _isNoteEvaluated = MutableStateFlow(false)
+    val isNoteEvaluated: StateFlow<Boolean> = _isNoteEvaluated.asStateFlow()
+
+    fun checkIfNoteIsEvaluated(noteId: Int) {
+        viewModelScope.launch {
+            _isNoteEvaluated.value = questionRepository.isNoteEvaluated(noteId)
+        }
+    }
+
+}

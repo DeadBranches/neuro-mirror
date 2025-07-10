@@ -78,7 +78,7 @@ fun NavGraph(
         composable<NavigationRoute.NoteDetailsScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.NoteDetailsScreen>()
             NoteDetailsScreen(
-                note = notesState.notes.first { it.id == route.id },
+                noteId = route.id,
                 questionViewModel = questionViewModel,
                 navController = navController
             )
