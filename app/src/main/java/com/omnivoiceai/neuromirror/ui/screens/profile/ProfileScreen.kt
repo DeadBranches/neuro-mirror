@@ -168,7 +168,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesViewModel: NotesViewModel, b
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+                columns = GridCells.Fixed(4),
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),

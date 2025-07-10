@@ -5,12 +5,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
@@ -45,8 +51,12 @@ fun UserBadges(
     onSeeOthersClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val visibleBadges = badges.take(8)
+
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -56,37 +66,46 @@ fun UserBadges(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        val visibleBadges = badges.take(8)
-
-        if(visibleBadges.isEmpty()) {
-                Text(stringResource(R.string.badges_empty), modifier = Modifier.padding(top = 8.dp))
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
-        ) {
-            visibleBadges.take(4).forEach { badge ->
-                BadgeCard(badge)
+        if (visibleBadges.isEmpty()) {
+            Text(
+                stringResource(R.string.badges_empty),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                visibleBadges.take(4).forEach { badge ->
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        BadgeCard(badge = badge)
+                    }
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
-        ) {
-            visibleBadges.drop(4).take(4).forEach { badge ->
-                BadgeCard(badge)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                visibleBadges.drop(4).forEach { badge ->
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        BadgeCard(badge = badge)
+                    }
+                }
             }
         }
 
         if (badges.size > 8) {
+            Spacer(modifier = Modifier.height(16.dp))
             SeeMoreLink(onClick = onSeeOthersClick)
         }
     }
 }
+
+
+
 
 @Composable
 fun BadgeCard(
