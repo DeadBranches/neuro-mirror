@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,15 +42,6 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         SettingLineItem(title = languageTitle, navController = {
             navController.navigate(NavigationRoute.SettingsSubScreen("Language"))
         })
-
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Text(
-            stringResource(R.string.settings_notifications),
-            style = MaterialTheme.typography.titleLarge
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
 
         Spacer(modifier = Modifier.height(24.dp))
         
