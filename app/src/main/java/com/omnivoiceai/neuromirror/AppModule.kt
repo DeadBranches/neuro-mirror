@@ -15,6 +15,7 @@ import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionNeuroImpl
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
+import com.omnivoiceai.neuromirror.data.repositories.LanguageRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
@@ -28,6 +29,7 @@ import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.BadgeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
+import com.omnivoiceai.neuromirror.ui.screens.settings.language.LanguageViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
@@ -137,7 +139,9 @@ val appModule = module {
     single { get<Context>().dataStore }
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single { ThemeRepository(get()) }
+    single { LanguageRepository(get())}
     viewModel { ThemeViewModel(get()) }
+    viewModel { LanguageViewModel(get()) }
     viewModel { EmotionViewModel(get()) }
     viewModel { BadgeViewModel(get()) }
     viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get(), get()) }

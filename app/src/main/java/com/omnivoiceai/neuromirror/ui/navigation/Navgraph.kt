@@ -25,8 +25,10 @@ import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.NotesQuestionIntrospections
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.SettingsScreen
+import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingsSubScreen
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.splash.SplashScreen
+import com.omnivoiceai.neuromirror.utils.Logger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -109,6 +111,11 @@ fun NavGraph(
                 chatViewModel = chatViewModel,
                 navController = navController
             )
+        }
+        composable<NavigationRoute.SettingsSubScreen> { backStackEntry ->
+            val title = backStackEntry.arguments?.getString("title") ?: ""
+            Logger.d("🧭 Current destination route: ${backStackEntry.toRoute<NavigationRoute.SettingsSubScreen>()}")
+            SettingsSubScreen(title = title)
         }
     }
 }

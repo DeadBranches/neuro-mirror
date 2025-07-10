@@ -14,6 +14,10 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE id = :noteId")
     suspend fun getNoteWithQuestions(noteId: Int): NoteWithQuestions
 
+    @Transaction
+    @Query("SELECT * FROM note WHERE id = :noteId")
+    suspend fun getNoteWithQuestionsAndAnswer(noteId: Int): NoteWithQuestionsAndAnswers
+
     @Query("SELECT * FROM note ORDER BY created_at DESC")
     fun getAll(): Flow<List<Note>>
 

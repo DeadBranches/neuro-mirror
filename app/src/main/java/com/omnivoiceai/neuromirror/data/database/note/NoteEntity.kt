@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.question.Question
+import com.omnivoiceai.neuromirror.data.database.question.QuestionWithAnswer
 import java.util.Date
 
 enum class EmotionDetected {
@@ -72,4 +73,14 @@ data class NoteWithQuestions(
         entityColumn = "note_id"
     )
     val questions: List<Question>
+)
+
+data class NoteWithQuestionsAndAnswers(
+    @Embedded val note: Note,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "note_id",
+        entity = Question::class
+    )
+    val questions: List<QuestionWithAnswer>
 )

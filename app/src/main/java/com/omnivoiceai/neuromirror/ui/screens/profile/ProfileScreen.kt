@@ -93,6 +93,11 @@ fun ProfileScreen(viewModel: ProfileViewModel, notesViewModel: NotesViewModel, b
             }
         }
 
+        if(visibleNotes.isNotEmpty())
+        item {
+            EmptySpacer(height = 32.dp)
+        }
+
         itemsIndexed(visibleNotes) { index, note ->
             TimelineItem(
                 note = note,

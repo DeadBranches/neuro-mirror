@@ -6,28 +6,32 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 
 @Composable
-fun SettingLineItem(name: String, destination: NavigationRoute.LoginScreen, navController: NavHostController) {
+fun SettingLineItem(title: String, navController: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth().clickable(){navController.navigate(destination)}.padding(vertical = 16.dp)
-    ){
-        Text(name, style = MaterialTheme.typography.bodyLarge )
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = navController)
+            .padding(vertical = 16.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge
+        )
         Icon(
-            Icons.Default.ArrowForwardIos,
-            contentDescription = "",
-            modifier = Modifier.size(16.dp),
+            imageVector = Icons.Default.ArrowForwardIos,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp)
         )
     }
 }

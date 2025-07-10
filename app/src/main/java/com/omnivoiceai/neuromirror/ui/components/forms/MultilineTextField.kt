@@ -20,11 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.omnivoiceai.neuromirror.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -71,7 +73,7 @@ fun MultilineTextField(
             Box(modifier = Modifier.fillMaxWidth()) {
                 if (textFieldValue.text.isEmpty()) {
                     Text(
-                        "Write your thoughts and feelings...",
+                        stringResource(R.string.welcome_chat),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize

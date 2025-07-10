@@ -1,6 +1,7 @@
 package com.omnivoiceai.neuromirror
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +30,7 @@ import com.omnivoiceai.neuromirror.ui.navigation.hasRoute
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import com.omnivoiceai.neuromirror.ui.theme.NeuroMirrorTheme
 import com.omnivoiceai.neuromirror.utils.Logger
+import com.omnivoiceai.neuromirror.utils.updateLocale
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
@@ -41,6 +44,7 @@ class MainActivity : ComponentActivity() {
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 //        Logger.d("On Create called")
 //        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
@@ -57,47 +61,65 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val themeViewModel = koinViewModel<ThemeViewModel>()
-            val themeState by themeViewModel.state.collectAsStateWithLifecycle()
-            val snackbarHostState = remember { SnackbarHostState() }
-
-            HandleUiEvents(snackbarHostState)
-
-
-            NeuroMirrorTheme(
-                darkTheme = themeState.isDarkTheme
+            androidx.compose.runtime.CompositionLocalProvider(
+                LocalAppContext provides this
             ) {
-                val navController = rememberNavController()
-                val backStackEntry by navController.currentBackStackEntryAsState()
+                val themeViewModel = koinViewModel<ThemeViewModel>()
+                val themeState by themeViewModel.state.collectAsStateWithLifecycle()
+                val snackbarHostState = remember { SnackbarHostState() }
 
-                val appBarVisible = remember(backStackEntry) {
-                    when {
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.LoginScreen>() == true -> false
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.RegisterScreen>() == true -> false
-                        else -> true
+                HandleUiEvents(snackbarHostState)
+
+
+                NeuroMirrorTheme(
+                    darkTheme = themeState.isDarkTheme
+                ) {
+                    val navController = rememberNavController()
+                    val backStackEntry by navController.currentBackStackEntryAsState()
+
+                    val appBarVisible = remember(backStackEntry) {
+                        when {
+                            backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> false
+                            backStackEntry?.destination?.hasRoute<NavigationRoute.LoginScreen>() == true -> false
+                            backStackEntry?.destination?.hasRoute<NavigationRoute.RegisterScreen>() == true -> false
+                            else -> true
+                        }
                     }
-                }
 
-                val fabVisible = remember(backStackEntry) {
-                    Logger.info(backStackEntry?.destination?.hasRoute<NavigationRoute.NoteDetailsScreen>().toString())
-                    when {
-                        backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> true
-                        else -> false
+                    val fabVisible = remember(backStackEntry) {
+                        Logger.info(backStackEntry?.destination?.hasRoute<NavigationRoute.NoteDetailsScreen>().toString())
+                        when {
+                            backStackEntry?.destination?.hasRoute<NavigationRoute.HomeScreen>() == true -> true
+                            else -> false
+                        }
                     }
-                }
 
-                Scaffold(
-                    topBar = { if(appBarVisible) AppBar(navController) },
-                    modifier = Modifier.fillMaxSize(),
-                    floatingActionButton = { if(fabVisible) Fab(navController = navController) },
-                    snackbarHost = { SnackbarHost(snackbarHostState) },
-                ) { innerPadding ->
-                    NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
+                    Scaffold(
+                        topBar = { if(appBarVisible) AppBar(navController) },
+                        modifier = Modifier.fillMaxSize(),
+                        floatingActionButton = { if(fabVisible) Fab(navController = navController) },
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                    ) { innerPadding ->
+                        NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
+                    }
                 }
             }
         }
     }
+
+
+    override fun attachBaseContext(newBase: Context) {
+        val language = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            .getString("language", "en") ?: "en"
+        val updatedContext = newBase.updateLocale(language)
+        super.attachBaseContext(updatedContext)
+    }
+
+    fun getSavedLanguage(context: Context): String {
+        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        return prefs.getString("language", "en") ?: "en"
+    }
+
 
 //    override fun onStart() {
 //        super.onStart()
@@ -118,3 +140,7 @@ class MainActivity : ComponentActivity() {
 //    }
 }
 
+
+val LocalAppContext = staticCompositionLocalOf<Context> {
+    error("LocalAppContext not provided")
+}

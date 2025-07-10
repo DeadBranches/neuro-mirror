@@ -93,5 +93,7 @@
 
     <string name="badge_unlocked_message">You unlocked the badge: %1$s</string>
     <string name="question">Question</string>
+    <string name="language">Language</string>
+    <string name="welcome_chat">Write your thoughts and feelings...</string>
 
 </resources>
