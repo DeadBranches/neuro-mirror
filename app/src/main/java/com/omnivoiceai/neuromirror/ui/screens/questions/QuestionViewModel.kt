@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.data.database.note.Note
-import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
 import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestionsAndAnswers
-import com.omnivoiceai.neuromirror.data.database.question.QuestionWithDetails
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
@@ -28,10 +26,6 @@ class QuestionViewModel(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private val _questionsWithDetails = MutableStateFlow<List<QuestionWithDetails>>(emptyList())
-    val questionsWithDetails: StateFlow<List<QuestionWithDetails>> = _questionsWithDetails.asStateFlow()
 
     private val _noteWithQuestions = MutableStateFlow<NoteWithQuestionsAndAnswers?>(null)
     val noteWithQuestions: StateFlow<NoteWithQuestionsAndAnswers?> = _noteWithQuestions.asStateFlow()
@@ -57,16 +51,6 @@ class QuestionViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-
-    suspend fun getNoteWithQuestions(noteId: Int): NoteWithQuestions {
-        return noteRepository.getNoteWithQuestions(noteId)
-    }
-
-    suspend fun getQuestionsWithDetailsByNoteId(noteId: Int): List<QuestionWithDetails> {
-        val questions = questionRepository.getQuestionsWithDetailsByNoteId(noteId)
-        _questionsWithDetails.value = questions
-        return questions
-    }
 
     fun generateQuestions(context: Context, note: Note, navController: NavController) {
         _isLoading.value = true
