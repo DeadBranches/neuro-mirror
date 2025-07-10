@@ -6,6 +6,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
+import com.omnivoiceai.neuromirror.utils.UiEventBus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,9 +36,11 @@ class LoginViewModel(
             authRepository.signIn(email, password).fold(
                 onSuccess = { user ->
                     _loginState.value = LoginState.Success(user)
+                    UiEventBus.showLoginSuccess()
                 },
                 onFailure = { exc ->
                     _loginState.value = LoginState.Error(exc.localizedMessage ?: "Login fallito")
+                    UiEventBus.showError(exc.localizedMessage ?: "")
                 }
             )
         }
@@ -69,9 +72,12 @@ class LoginViewModel(
                 onSuccess = { user ->
                     updateGoogleProfileData(user)
                     _loginState.value = LoginState.Success(user)
+                    UiEventBus.showLoginSuccess()
                 },
                 onFailure = { exc ->
                     _loginState.value = LoginState.Error(exc.localizedMessage ?: "Login Google fallito")
+                    UiEventBus.showError(exc.localizedMessage ?: "")
+
                 }
             )
         }
@@ -122,5 +128,6 @@ class LoginViewModel(
     fun signOut() {
         authRepository.signOut()
         _loginState.value = LoginState.Idle
+        UiEventBus.showLogout()
     }
 }

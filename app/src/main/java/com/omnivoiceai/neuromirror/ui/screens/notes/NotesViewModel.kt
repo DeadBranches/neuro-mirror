@@ -47,7 +47,6 @@ class NotesViewModel(
                 Logger.info("noteCount=$noteCount, emotion=$emotion, emotionCount=$emotionCount")
 
                 badgeRepository.checkNoteMilestones(noteCount)
-                badgeRepository.checkEmotionMilestones(emotion, emotionCount)
             } catch (e: Exception) {
                 Logger.error("Errore in addNote: ${e.message}")
                 e.printStackTrace()

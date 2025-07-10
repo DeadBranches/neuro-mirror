@@ -16,7 +16,7 @@ data class UiNotificationData(
 
 sealed class UIEvent {
     data class ShowNotification(
-        val message: String,
+        val message: Any,
         val type: UiNotificationType = UiNotificationType.Info,
         val icon: String? = null
     ) : UIEvent()
