@@ -6,10 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,7 @@ fun SettingLineItem(name: String, destination: NavigationRoute.LoginScreen, navC
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth().clickable(){navController.navigate(destination)}.padding(vertical = 16.dp)
     ){
-        Text(name, modifier = Modifier)
+        Text(name, style = MaterialTheme.typography.bodyLarge )
         Icon(
             Icons.Default.ArrowForwardIos,
             contentDescription = "",

@@ -75,6 +75,7 @@
 
     <!-- Etichette Emozioni -->
     <string name="emotion_detected">Emozione rilevata</string>
+    <string name="introspection">Introspezione</string>
     <string name="emotion_start_introspection">Inizia introspezione</string>
     <string name="emotion_continue_introspection">Continua introspezione</string>
     <string name="emotion_sadness">Tristezza</string>
@@ -92,5 +93,6 @@
     <string name="emotion_sarcasm">Sarcasmo</string>
 
     <string name="badge_unlocked_message">Hai sbloccato il badge: %1$s</string>
+    <string name="question">Domande</string>
 
 </resources>

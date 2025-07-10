@@ -74,6 +74,7 @@
 
     <!-- Emotion Labels -->
     <string name="emotion_detected">Emotion detected</string>
+    <string name="introspection">Introspection</string>
     <string name="emotion_start_introspection">Start Introspection</string>
     <string name="emotion_continue_introspection">Continue Introspection</string>
     <string name="emotion_sadness">Sadness</string>
@@ -91,5 +92,6 @@
     <string name="emotion_sarcasm">Sarcasm</string>
 
     <string name="badge_unlocked_message">You unlocked the badge: %1$s</string>
+    <string name="question">Question</string>
 
 </resources>
