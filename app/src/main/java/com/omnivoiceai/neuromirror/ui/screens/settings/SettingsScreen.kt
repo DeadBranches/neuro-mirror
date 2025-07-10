@@ -20,7 +20,6 @@ import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTest
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
-import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeSettings
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
 @Composable
@@ -34,18 +33,22 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
             .padding(horizontal = 16.dp, 8.dp)
     ){
 //        SettingLineItem(stringResource(R.string.settings_page_theme_title), NavigationRoute.LoginScreen, navController = navController)
-//        SettingLineItem(title = "Notifiche", )
         val themeTitle = stringResource(R.string.settings_page_theme_title)
         SettingLineItem(title = themeTitle, navController = {
             navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
         })
-//        SettingLineItem(title = "Privacy", navController = navController)
+        SettingLineItem(title = "Notifiche", navController = {
+            navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
+        })
+        SettingLineItem(title = "Privacy", navController = {
+            navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
+        })
 
-        Text(
-            stringResource(R.string.settings_page_theme_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-        ThemeSettings(themeState, themeViewModel::changeTheme)
+//        Text(
+//            stringResource(R.string.settings_page_theme_title),
+//            style = MaterialTheme.typography.titleLarge
+//        )
+//        ThemeSettings(themeState, themeViewModel::changeTheme)
         
         Spacer(modifier = Modifier.height(24.dp))
         
