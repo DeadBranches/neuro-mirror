@@ -24,7 +24,7 @@ fun UIEvent.toUiNotification(): UiNotificationData? {
         is UIEvent.Logout -> UiNotificationData("Logout effettuato", "🚪", Color.Gray)
 
         is UIEvent.BadgeUnlocked -> UiNotificationData(
-            message = "Hai sbloccato un badge: ${badge.badgeKey}",
+            message = badge,
             emoji = emoji ?: "🎖️",
             color = Color(0xFF4CAF50)
         )

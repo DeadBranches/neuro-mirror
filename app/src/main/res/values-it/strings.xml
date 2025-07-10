@@ -95,6 +95,8 @@
     <string name="badge_unlocked_message">Hai sbloccato il badge: %1$s</string>
     <string name="question">Domande</string>
     <string name="language">Lingua</string>
-    <string name="welcome_chat">Scrivi i tuoi pensieri e sentimenti...</string>
+    <string name="welcome_chat">Scrivi i tuoi pensieri e sentimenti…</string>
+    <string name="login_success">Login con success</string>
+    <string name="logout_success">Logout con successo</string>
 
 </resources>

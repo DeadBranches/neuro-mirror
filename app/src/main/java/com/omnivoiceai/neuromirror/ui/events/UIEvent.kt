@@ -8,7 +8,7 @@ enum class UiNotificationType {
 }
 
 data class UiNotificationData(
-    val message: String,
+    val message: Any,
     val emoji: String?,
     val color: Color
 )
