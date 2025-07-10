@@ -39,10 +39,9 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         SettingLineItem(title = notificationTitle, navController = {
             navController.navigate(NavigationRoute.SettingsSubScreen(notificationTitle))
         })
-//        val languageTitle = stringResource(R.string.language)
-        val languageTitle = "Language"
+        val languageTitle = stringResource(R.string.language)
         SettingLineItem(title = languageTitle, navController = {
-            navController.navigate(NavigationRoute.SettingsSubScreen(languageTitle))
+            navController.navigate(NavigationRoute.SettingsSubScreen("Language"))
         })
 
         Spacer(modifier = Modifier.height(24.dp))
