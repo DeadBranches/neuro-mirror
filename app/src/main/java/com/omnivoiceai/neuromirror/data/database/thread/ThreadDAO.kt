@@ -15,6 +15,16 @@ interface ThreadDAO {
     // Thread operations
     @Query("SELECT * FROM Thread ORDER BY last_updated DESC")
     fun getAllThreads(): Flow<List<Thread>>
+
+    @Query("SELECT * FROM Thread ORDER BY last_updated DESC")
+    fun getAllThreadsRaw(): List<Thread>
+
+    @Transaction
+    @Query("SELECT * FROM messages")
+    fun getAllMessages(): Flow<List<Message>>
+
+    @Query("SELECT * FROM messages")
+    fun getAllMessagesRaw(): List<Message>
     
     @Query("SELECT * FROM Thread WHERE note_id = :noteId")
     fun getThreadsByNoteId(noteId: Int): Flow<List<Thread>>
@@ -87,4 +97,7 @@ interface ThreadDAO {
     
     @Query("SELECT COUNT(*) FROM messages WHERE thread_id = :threadId")
     suspend fun getMessageCountByThreadId(threadId: Int): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(threads: List<Thread>)
 } 

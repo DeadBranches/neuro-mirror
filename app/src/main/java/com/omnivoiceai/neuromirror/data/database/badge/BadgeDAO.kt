@@ -12,6 +12,9 @@ interface BadgeDAO {
     @Query("SELECT * FROM Badge")
     fun getAll(): Flow<List<Badge>>
 
+    @Query("SELECT * FROM Badge")
+    fun getAllRaw(): List<Badge>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(badge: Badge)
 
@@ -20,4 +23,7 @@ interface BadgeDAO {
 
     @Query("SELECT * FROM Badge WHERE badgeKey = :key")
     suspend fun getByKey(key: String): Badge?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(badges: List<Badge>)
 }

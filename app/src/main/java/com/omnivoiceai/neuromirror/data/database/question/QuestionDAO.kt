@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuestionDAO {
@@ -24,6 +23,22 @@ interface QuestionDAO {
 
     @Update
     suspend fun updateQuestionAnswer(answer: QuestionAnswer)
+
+    @Transaction
+    @Query("SELECT * FROM Question")
+    suspend fun getAll(): List<Question>
+
+    @Transaction
+    @Query("SELECT * FROM OneShotQuestion")
+    suspend fun getAllOneShots(): List<OneShotQuestion>
+
+    @Transaction
+    @Query("SELECT * FROM MultipleChoiceQuestion")
+    suspend fun getAllMultipleChoice(): List<MultipleChoiceQuestion>
+
+    @Transaction
+    @Query("SELECT * FROM Question")
+    suspend fun getQuestionsWithAnswers(): List<QuestionWithAnswer>
 
     @Query("SELECT * FROM Question WHERE note_id = :noteId")
     suspend fun getQuestionsByNoteId(noteId: Int): List<Question>
@@ -44,4 +59,18 @@ interface QuestionDAO {
 
     @Query("DELETE FROM Question WHERE note_id = :noteId")
     suspend fun deleteQuestionsByNoteId(noteId: Int)
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllQuestions(list: List<Question>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllOneShots(list: List<OneShotQuestion>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllMultipleChoices(list: List<MultipleChoiceQuestion>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllAnswers(list: List<QuestionAnswer>)
+
 }
