@@ -1,8 +1,10 @@
 package com.omnivoiceai.neuromirror.ui.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.Note
+import com.omnivoiceai.neuromirror.ui.components.forms.MultilineTextField
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesState
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
@@ -39,45 +43,48 @@ private const val TAG2 = "GreetingComposable"
 @Composable
 fun HomeScreen(notesState:NotesState, notesViewModel: NotesViewModel, navController: NavHostController, modifier: Modifier = Modifier) {
 //    Toast.makeText(LocalContext.current, "$TAG onPause", Toast.LENGTH_LONG).show()
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(TextFieldValue()) }
 
     Column(
         modifier= Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             stringResource(R.string.home_page_title),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
 
         )
         EmptySpacer()
-        TextField(
+        /*TextField(
             value = text,
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp),
             onValueChange = {text = it}
-        )
+        )*/
+        MultilineTextField(text, onValueChange = {text = it})
+
         Row {
             Button(
-                onClick = { text = "" },
-                enabled = text.isNotEmpty()
+                onClick = { text = TextFieldValue() },
+                enabled = text.text.isNotEmpty()
             ) {
                 Text(stringResource(R.string.cancel),
                 )
             }
+            EmptySpacer(width = 8.dp)
             Button(
                 onClick = {
                     notesViewModel::actions.get()
-                        .addNote(Note( content = text, createdAt = Date.from(Instant.now())))
-                    text = ""
+                        .addNote(Note( content = text.text, createdAt = Date.from(Instant.now())))
+                    text = TextFieldValue()
                 },
-                enabled = text.isNotEmpty()
+                enabled = text.text.isNotEmpty()
             ) {
                 Text(stringResource(R.string.save))
             }

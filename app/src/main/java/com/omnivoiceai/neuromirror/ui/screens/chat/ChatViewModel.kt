@@ -3,14 +3,21 @@ package com.omnivoiceai.neuromirror.ui.screens.chat
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
+import com.omnivoiceai.neuromirror.data.database.thread.Message
+import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
+import com.omnivoiceai.neuromirror.data.database.thread.Thread
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
+import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Date
 
 data class ChatMessage(
     val content: String,
@@ -22,7 +29,8 @@ data class ChatState(
     val messages: List<ChatMessage> = emptyList(),
     val isLoading: Boolean = false,
     val isInitialized: Boolean = false,
-    val currentMessage: String = ""
+    val currentMessage: String = "",
+    val currentThreadId: Int? = null
 )
 
 interface ChatActions {
@@ -34,7 +42,8 @@ interface ChatActions {
 class ChatViewModel(
     private val introspectionRepository: IntrospectionRepository,
     private val noteRepository: NoteRepository,
-    private val questionRepository: QuestionRepository
+    private val questionRepository: QuestionRepository,
+    private val threadRepository: ThreadRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ChatState())
@@ -51,23 +60,63 @@ class ChatViewModel(
                     val noteWithQuestions = noteRepository.getNoteWithQuestions(noteId)
                     val questionsWithAnswers = questionRepository.getQuestionsWithAnswersByNoteId(noteId)
                     
-                    // Build initial message with note content, emotion, and answers
-                    val initialMessage = buildInitialMessage(noteWithQuestions, questionsWithAnswers)
+                    // Check if there's an existing thread with messages for this note
+                    val existingThreads = threadRepository.getThreadsWithMessagesByNoteId(noteId).first()
+                    val currentThread = if (existingThreads.isNotEmpty()) {
+                        // Use the most recent thread
+                        existingThreads.first()
+                    } else {
+                        // Create new thread
+                        val now = Date()
+                        val thread = Thread(
+                            noteId = noteId,
+                            title = "Chat Session - ${java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault()).format(now)}",
+                            date = now,
+                            lastUpdated = now
+                        )
+                        val threadId = threadRepository.upsert(thread).toInt()
+                        
+                        // Build initial message and send to backend
+                        val initialMessage = buildInitialMessage(noteWithQuestions, questionsWithAnswers)
+                        
+                        val response = introspectionRepository.sendMessage(
+                            userMessage = initialMessage,
+                            threadId = threadId.toString()
+                        )
+                        
+                        // Save messages to database
+                        threadRepository.upsert(Message(
+                            threadId = threadId,
+                            role = MessageRole.SYSTEM,
+                            content = initialMessage,
+                            timestamp = now
+                        ))
+                        
+                        threadRepository.upsert(Message(
+                            threadId = threadId,
+                            role = MessageRole.ASSISTANT,
+                            content = response.body,
+                            timestamp = Date()
+                        ))
+                        
+                        // Get the thread with messages
+                        threadRepository.getThreadWithMessages(threadId)!!
+                    }
                     
-                    // Send to backend directly without showing the configuration message
-                    val response = introspectionRepository.sendMessage(
-                        userMessage = initialMessage,
-                        threadId = noteId.toString()
-                    )
-                    
-                    // Add ONLY the assistant response to start the conversation
-                    val assistantMessage = ChatMessage(
-                        content = response.body,
-                        isUser = false
-                    )
+                    // Convert database messages to UI messages (excluding system messages)
+                    val uiMessages = currentThread.messages
+                        .filter { it.role != MessageRole.SYSTEM }
+                        .map { dbMessage ->
+                            ChatMessage(
+                                content = dbMessage.content,
+                                isUser = dbMessage.role == MessageRole.USER,
+                                timestamp = dbMessage.timestamp.time
+                            )
+                        }
                     
                     _state.value = _state.value.copy(
-                        messages = listOf(assistantMessage),
+                        messages = uiMessages,
+                        currentThreadId = currentThread.thread.id,
                         isInitialized = true,
                         isLoading = false
                     )
@@ -90,8 +139,9 @@ class ChatViewModel(
         override fun sendMessage(context: Context, noteId: Int) {
             val currentState = _state.value
             val userMessage = currentState.currentMessage.trim()
+            val threadId = currentState.currentThreadId
             
-            if (userMessage.isBlank() || currentState.isLoading) return
+            if (userMessage.isBlank() || currentState.isLoading || threadId == null) return
             
             // Add user message immediately
             val userChatMessage = ChatMessage(
@@ -105,15 +155,33 @@ class ChatViewModel(
                 isLoading = true
             )
             
-            // Send to backend
+            // Send to backend and save to database
             viewModelScope.launch {
                 try {
+                    val now = Date()
+                    
+                    // Save user message to database
+                    threadRepository.upsert(Message(
+                        threadId = threadId,
+                        role = MessageRole.USER,
+                        content = userMessage,
+                        timestamp = now
+                    ))
+                    
                     val response = introspectionRepository.sendMessage(
                         userMessage = userMessage,
-                        threadId = noteId.toString()
+                        threadId = threadId.toString()
                     )
                     
-                    // Add assistant response
+                    // Save assistant message to database
+                    threadRepository.upsert(Message(
+                        threadId = threadId,
+                        role = MessageRole.ASSISTANT,
+                        content = response.body,
+                        timestamp = Date()
+                    ))
+                    
+                    // Add assistant response to UI
                     val assistantMessage = ChatMessage(
                         content = response.body,
                         isUser = false
@@ -143,7 +211,7 @@ class ChatViewModel(
         }
     }
 
-    private fun buildInitialMessage(noteWithQuestions: com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions, questionsWithAnswers: List<com.omnivoiceai.neuromirror.data.database.question.QuestionWithAnswer>): String {
+    private fun buildInitialMessage(noteWithQuestions: NoteWithQuestions, questionsWithAnswers: List<com.omnivoiceai.neuromirror.data.database.question.QuestionWithAnswer>): String {
         val initialMessageBuilder = StringBuilder()
         initialMessageBuilder.append("Note content: ${noteWithQuestions.note.content}\n\n")
         

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omnivoiceai.neuromirror.data.database.note.EmotionDetected
 import com.omnivoiceai.neuromirror.data.database.note.Note
+import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
@@ -20,6 +21,7 @@ class NotesViewModel(
     private val emotionRepository: EmotionRepository,
     private val introspectionRepository: IntrospectionRepository,
     private val questionRepository: QuestionRepository,
+    private val badgeRepository: BadgeRepository,
 ): ViewModel() {
     val state = repository.notes.map { NotesState(it) }.stateIn(
         scope = viewModelScope,
@@ -27,18 +29,31 @@ class NotesViewModel(
         initialValue = NotesState(emptyList())
     )
     
-    // Getter per il repository
     fun getNoteRepository(): NoteRepository = repository
 
     val actions = object : NotesActions {
 
         override fun addNote(note: Note): Job = viewModelScope.launch {
-            val emotionLabel = emotionRepository.classify(note.content)
-            val emotion = EmotionDetected.valueOf(emotionLabel.name)
+            try {
+                val emotionLabel = emotionRepository.classify(note.content)
+                val emotion = EmotionDetected.valueOf(emotionLabel.name)
 
-            val updatedNote = note.copy(emotionDetected = emotion)
-            repository.upsert(updatedNote)
+                val updatedNote = note.copy(emotionDetected = emotion)
+                repository.upsert(updatedNote)
+
+                val noteCount = repository.countNotes()
+                val emotionCount = repository.countNotesByEmotion(emotion)
+
+                Logger.info("noteCount=$noteCount, emotion=$emotion, emotionCount=$emotionCount")
+
+                badgeRepository.checkNoteMilestones(noteCount)
+                badgeRepository.checkEmotionMilestones(emotion, emotionCount)
+            } catch (e: Exception) {
+                Logger.error("Errore in addNote: ${e.message}")
+                e.printStackTrace()
+            }
         }
+
 
 
         override fun removeNote(note: Note): Job = viewModelScope.launch {
@@ -47,21 +62,26 @@ class NotesViewModel(
 
         override fun generateQuestions(note: Note): Job = viewModelScope.launch {
             try {
-                // Use the new extension function for type-safe question generation
                 val response = introspectionRepository.sendQuestion(
                     userMessage = note.content,
                     threadId = note.id.toString()
                 )
                 
-                // Parse and save questions using the response data
                 questionRepository.saveQuestions(response.questions, note.id)
                 
-                // Update the note to mark it as evaluated
                 val updatedNote = note.copy(isEvaluated = true)
                 repository.upsert(updatedNote)
             } catch (e: Exception) {
                 Logger.error("Error generating questions", e)
             }
         }
+    }
+
+    suspend fun getEmotionCounts(): List<Pair<EmotionDetected, Int>> {
+        return repository.getEmotionCounts()
+    }
+
+    suspend fun getEmotionCount(emotion: EmotionDetected): Int {
+        return repository.countNotesByEmotion(emotion)
     }
 }

@@ -13,4 +13,5 @@ sealed interface NavigationRoute {
     @Serializable data class NoteQuestionsScreen(val noteId: Int): NavigationRoute
     @Serializable data class LoadingScreen(val noteId: Int): NavigationRoute
     @Serializable data class ChatScreen(val noteId: Int): NavigationRoute
+    @Serializable data class SettingsSubScreen(val title: String): NavigationRoute
 }

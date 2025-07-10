@@ -1,6 +1,5 @@
 package com.omnivoiceai.neuromirror.ui.screens.questions
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
 import com.omnivoiceai.neuromirror.data.database.question.MultipleChoiceQuestion
 import com.omnivoiceai.neuromirror.data.database.question.OneShotQuestion
@@ -82,14 +83,14 @@ fun NotesQuestionIntrospections(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             // Note content
             Text(
-                text = "Introspection",
+                text = stringResource(R.string.introspection),
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
             
             Card(
@@ -108,7 +109,7 @@ fun NotesQuestionIntrospections(
             
             // Questions
             Text(
-                text = "Questions",
+                text = stringResource(R.string.question),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
@@ -181,7 +182,7 @@ fun NotesQuestionIntrospections(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp)
+                        .padding(vertical = 24.dp)
                 ) {
                     Text("Start Conversation")
                 }
@@ -221,28 +222,3 @@ fun DefaultQuestionComponent(question: Question) {
         )
     }
 }
-
-// Helper functions to find question details
-private fun findOneShotDetails(question: Question, noteWithQuestions: NoteWithQuestions): OneShotQuestion? {
-    // In a real app, you would query the database for this
-    // For this example, we're creating mock data based on the question
-    return when (question.title) {
-        "Did the absence of messages feel like a reflection of your worth?" -> 
-            OneShotQuestion(questionId = question.id, answers = listOf("Yes", "No", "Uncertain"))
-        else -> null
-    }
-}
-
-private fun findMultipleChoiceDetails(question: Question, noteWithQuestions: NoteWithQuestions): MultipleChoiceQuestion? {
-    // In a real app, you would query the database for this
-    // For this example, we're creating mock data based on the question
-    return when (question.title) {
-        "What need was left unfulfilled by the silence?" -> 
-            MultipleChoiceQuestion(
-                questionId = question.id, 
-                options = listOf("Reassurance", "Validation", "Companionship", "Distraction"),
-                correctIndex = 1
-            )
-        else -> null
-    }
-} 

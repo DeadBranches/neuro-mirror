@@ -105,6 +105,9 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logger)
     implementation(libs.ktor.client.logger.slf)
+    implementation(libs.chart)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.lifecycle.process)
 }
 
 ktorfit {

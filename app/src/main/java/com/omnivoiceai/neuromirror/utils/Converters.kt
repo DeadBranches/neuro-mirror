@@ -3,8 +3,11 @@ package com.omnivoiceai.neuromirror.utils
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.omnivoiceai.neuromirror.data.database.badge.BadgeCategory
 import com.omnivoiceai.neuromirror.data.database.note.EmotionDetected
 import com.omnivoiceai.neuromirror.data.database.question.QuestionType
+import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
+import com.omnivoiceai.neuromirror.data.database.thread.MessageType
 import java.util.Date
 
 class Converters {
@@ -54,4 +57,30 @@ class Converters {
     fun toStringList(value: String?): List<String>? {
         return value?.split("|||")
     }
+
+    @TypeConverter
+    fun fromMessageRole(value: MessageRole?): String? {
+        return value?.name
+    }
+
+    @TypeConverter
+    fun toMessageRole(value: String?): MessageRole? {
+        return value?.let { MessageRole.valueOf(it) }
+    }
+
+    @TypeConverter
+    fun fromMessageType(value: MessageType?): String? {
+        return value?.name
+    }
+
+    @TypeConverter
+    fun toMessageType(value: String?): MessageType? {
+        return value?.let { MessageType.valueOf(it) }
+    }
+
+    @TypeConverter
+    fun fromBadgeCategory(category: BadgeCategory): String = category.name
+
+    @TypeConverter
+    fun toBadgeCategory(value: String): BadgeCategory = BadgeCategory.valueOf(value)
 } 

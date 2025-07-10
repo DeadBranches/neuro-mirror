@@ -8,22 +8,28 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.omnivoiceai.neuromirror.data.database.AppDatabase
 import com.omnivoiceai.neuromirror.data.ml.EmotionModel
-import com.omnivoiceai.neuromirror.data.remote.ChatService
-import com.omnivoiceai.neuromirror.data.remote.createChatService
+import com.omnivoiceai.neuromirror.data.remote.ChatDataSource
+import com.omnivoiceai.neuromirror.data.remote.createChatDataSource
 import com.omnivoiceai.neuromirror.data.repositories.AuthRepository
+import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.EmotionRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionNeuroImpl
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
+import com.omnivoiceai.neuromirror.data.repositories.LanguageRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThemeRepository
+import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
+import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
 import com.omnivoiceai.neuromirror.ui.screens.note_detail.EmotionViewModel
 import com.omnivoiceai.neuromirror.ui.screens.notes.NotesViewModel
+import com.omnivoiceai.neuromirror.ui.screens.profile.BadgeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.profile.ProfileViewModel
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
+import com.omnivoiceai.neuromirror.ui.screens.settings.language.LanguageViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
@@ -58,6 +64,48 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Create Thread table (using class name as table name)
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `Thread` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `note_id` INTEGER NOT NULL,
+                `note_firebase_id` TEXT,
+                `title` TEXT NOT NULL,
+                `date` INTEGER NOT NULL,
+                `last_updated` INTEGER NOT NULL,
+                `firebase_id` TEXT,
+                `is_synced` INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(`note_id`) REFERENCES `Note`(`id`) ON DELETE CASCADE
+            )
+        """
+        )
+        
+        // Create messages table
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `messages` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `thread_id` INTEGER NOT NULL,
+                `role` TEXT NOT NULL,
+                `content` TEXT NOT NULL,
+                `timestamp` INTEGER NOT NULL,
+                `message_type` TEXT NOT NULL DEFAULT 'TEXT',
+                `firebase_id` TEXT,
+                `is_synced` INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY(`thread_id`) REFERENCES `Thread`(`id`) ON DELETE CASCADE
+            )
+        """
+        )
+        
+        // Create indexes for better performance
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_Thread_note_id` ON `Thread` (`note_id`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_messages_thread_id` ON `messages` (`thread_id`)")
+    }
+}
+
 val appModule = module {
     single {
         HttpClient(CIO) {
@@ -79,39 +127,47 @@ val appModule = module {
             }
         }
     }
-    single<ChatService> {
+    single<ChatDataSource> {
         Ktorfit.Builder()
-            .baseUrl("http://192.168.1.226:8000/")
-//            .baseUrl("https://api.ai.digitalnext.business/")
+//            .baseUrl("http://192.168.1.226:8000/")
+            .baseUrl("https://api.ai.digitalnext.business/")
             .httpClient(get<HttpClient>())
             .build()
-            .createChatService()
+            .createChatDataSource()
     }
 
     single { get<Context>().dataStore }
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single { ThemeRepository(get()) }
+    single { LanguageRepository(get())}
     viewModel { ThemeViewModel(get()) }
+    viewModel { LanguageViewModel(get()) }
     viewModel { EmotionViewModel(get()) }
-    viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get()) }
+    viewModel { BadgeViewModel(get()) }
+    viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get(), get()) }
     viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName))) }
-    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get()) }
+    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get()) }
     single {
         Room.databaseBuilder(
             get(),
             AppDatabase::class.java,
             "note-list"
-        ).addMigrations(MIGRATION_1_2).build()
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+         .fallbackToDestructiveMigration() // Remove this after successful migration
+         .build()
     }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
-    single { QuestionRepository(get<AppDatabase>().questionDao(), get<AppDatabase>().noteDao()) }
+    single { QuestionRepository(get<AppDatabase>().questionDao()) }
+    single { ThreadRepository(get<AppDatabase>().threadDao()) }
     single { ProfileRepository(get()) }
+    single { BadgeRepository(get<AppDatabase>().badgeDao()) }
     single { AuthRepository(get(), get()) }
 
     viewModel { ProfileViewModel(get()) }
     single { EmotionModel(get()) }
     single { EmotionRepository(get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { RegisterViewModel(get(), get()) }
 
     factory(named("Neuro")) { IntrospectionNeuroImpl(get(), get()) } bind IntrospectionRepository::class
 }

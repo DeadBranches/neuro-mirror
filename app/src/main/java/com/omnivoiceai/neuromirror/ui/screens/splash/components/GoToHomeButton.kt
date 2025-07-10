@@ -16,7 +16,9 @@ import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 fun GoToHomeButton(navController: NavHostController) {
 
     fun onClick() {
-        navController.navigate(NavigationRoute.HomeScreen)
+        navController.navigate(NavigationRoute.HomeScreen, {
+            popUpTo(0) { inclusive = true }
+        })
     };
 
     Text("Not Now!",
