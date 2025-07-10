@@ -12,11 +12,8 @@ import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class QuestionViewModel(
@@ -39,18 +36,6 @@ class QuestionViewModel(
             }
         }
     }
-
-    val isNoteEvaluated: StateFlow<Boolean> = _noteWithQuestions
-        .map { note ->
-            note?.questions?.any { q ->
-                val a = q.answer
-                a?.answerText?.isNotBlank() == true ||
-                        a?.selectedOptionIndex != null ||
-                        a?.selectedOptionText?.isNotBlank() == true
-            } ?: false
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
 
     fun generateQuestions(context: Context, note: Note, navController: NavController) {
         _isLoading.value = true
