@@ -94,5 +94,6 @@
 
     <string name="badge_unlocked_message">Hai sbloccato il badge: %1$s</string>
     <string name="question">Domande</string>
+    <string name="language">Lingua</string>
 
 </resources>

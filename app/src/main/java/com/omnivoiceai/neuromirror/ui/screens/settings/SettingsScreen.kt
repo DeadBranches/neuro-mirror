@@ -18,7 +18,6 @@ import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
-import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTest
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
@@ -32,24 +31,20 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
             .fillMaxSize()
             .padding(horizontal = 16.dp, 8.dp)
     ){
-//        SettingLineItem(stringResource(R.string.settings_page_theme_title), NavigationRoute.LoginScreen, navController = navController)
         val themeTitle = stringResource(R.string.settings_page_theme_title)
         SettingLineItem(title = themeTitle, navController = {
             navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
         })
-        SettingLineItem(title = "Notifiche", navController = {
-            navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
+        val notificationTitle = stringResource(R.string.settings_notifications)
+        SettingLineItem(title = notificationTitle, navController = {
+            navController.navigate(NavigationRoute.SettingsSubScreen(notificationTitle))
         })
-        SettingLineItem(title = "Privacy", navController = {
-            navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
+//        val languageTitle = stringResource(R.string.language)
+        val languageTitle = "Language"
+        SettingLineItem(title = languageTitle, navController = {
+            navController.navigate(NavigationRoute.SettingsSubScreen(languageTitle))
         })
 
-//        Text(
-//            stringResource(R.string.settings_page_theme_title),
-//            style = MaterialTheme.typography.titleLarge
-//        )
-//        ThemeSettings(themeState, themeViewModel::changeTheme)
-        
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
@@ -59,8 +54,6 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         
         Spacer(modifier = Modifier.height(8.dp))
 
-        NotificationTest()
-        
         Spacer(modifier = Modifier.height(24.dp))
         
         if(currentUser != null) {
