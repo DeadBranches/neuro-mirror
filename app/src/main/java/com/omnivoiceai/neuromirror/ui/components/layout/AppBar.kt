@@ -3,7 +3,6 @@ package com.omnivoiceai.neuromirror.ui.components.layout
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,6 +31,8 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     Logger.d("🧭 Current destination route: ${backStackEntry?.destination?.route}")
+    Logger.d("🧭 Current destination route: ${NavigationRoute.SettingsSubScreen}")
+    Logger.d("🧭 Current destination route: ${backStackEntry?.arguments?.getString("title")}")
 
     val title = when {
         backStackEntry?.destination?.hasRoute<NavigationRoute.SplashScreen>() == true -> stringResource(
@@ -42,7 +43,7 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
             R.string.settings_page_title)
         backStackEntry?.destination?.hasRoute<NavigationRoute.ProfileScreen>() == true -> stringResource(
             R.string.profile_screen_name)
-        else -> null
+        else -> backStackEntry?.arguments?.getString("title")
     }
 
     return TopAppBar(

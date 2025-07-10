@@ -1,9 +1,5 @@
 package com.omnivoiceai.neuromirror.ui.screens.settings
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,17 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.omnivoiceai.neuromirror.R
-import com.omnivoiceai.neuromirror.notifications.NotificationScheduler
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
-import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTestSettings
+import com.omnivoiceai.neuromirror.ui.screens.settings.components.NotificationTest
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeSettings
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
@@ -34,14 +27,20 @@ import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostController, themeViewModel: ThemeViewModel){
     val themeState by themeViewModel.state.collectAsStateWithLifecycle()
     val currentUser by loginViewModel.currentUser.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
     Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, 8.dp)
     ){
-        SettingLineItem(stringResource(R.string.settings_page_theme_title), NavigationRoute.LoginScreen, navController = navController)
+//        SettingLineItem(stringResource(R.string.settings_page_theme_title), NavigationRoute.LoginScreen, navController = navController)
+//        SettingLineItem(title = "Notifiche", )
+        val themeTitle = stringResource(R.string.settings_page_theme_title)
+        SettingLineItem(title = themeTitle, navController = {
+            navController.navigate(NavigationRoute.SettingsSubScreen(themeTitle))
+        })
+//        SettingLineItem(title = "Privacy", navController = navController)
+
         Text(
             stringResource(R.string.settings_page_theme_title),
             style = MaterialTheme.typography.titleLarge
@@ -56,43 +55,8 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         )
         
         Spacer(modifier = Modifier.height(8.dp))
-        
-        NotificationTestSettings(
-            onTestNotification = {
-                val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) == PackageManager.PERMISSION_GRANTED
-                } else {
-                    true // Permission not required for API < 33
-                }
-                
-                if (hasPermission) {
-                    try {
-                        val scheduler = NotificationScheduler(context)
-                        scheduler.scheduleTestNotification()
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.test_notification_scheduled),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: SecurityException) {
-                        Toast.makeText(
-                            context,
-                            "Notification permission required",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Please grant notification permission in app settings",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        )
+
+        NotificationTest()
         
         Spacer(modifier = Modifier.height(24.dp))
         

@@ -3,20 +3,21 @@ package com.omnivoiceai.neuromirror.ui.screens.chat
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
+import com.omnivoiceai.neuromirror.data.database.thread.Message
+import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
+import com.omnivoiceai.neuromirror.data.database.thread.Thread
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
-import com.omnivoiceai.neuromirror.data.database.thread.Message
-import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
-import com.omnivoiceai.neuromirror.data.database.thread.Thread
-import java.util.Date
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Date
 
 data class ChatMessage(
     val content: String,
@@ -210,7 +211,7 @@ class ChatViewModel(
         }
     }
 
-    private fun buildInitialMessage(noteWithQuestions: com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions, questionsWithAnswers: List<com.omnivoiceai.neuromirror.data.database.question.QuestionWithAnswer>): String {
+    private fun buildInitialMessage(noteWithQuestions: NoteWithQuestions, questionsWithAnswers: List<com.omnivoiceai.neuromirror.data.database.question.QuestionWithAnswer>): String {
         val initialMessageBuilder = StringBuilder()
         initialMessageBuilder.append("Note content: ${noteWithQuestions.note.content}\n\n")
         
