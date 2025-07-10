@@ -27,8 +27,6 @@ class RegisterViewModel(
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val registerState: StateFlow<RegisterState> = _registerState.asStateFlow()
 
-    val currentUser: StateFlow<FirebaseUser?> = authRepository.userFlow
-
     fun signUpWithEmail(email: String, password: String, username: String, firstName: String, lastName: String) {
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
@@ -54,7 +52,6 @@ class RegisterViewModel(
         }
     }
 
-    // ✅ Metodi corretti per Identity API (One Tap)
     fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
 
     fun getSignInRequest(): BeginSignInRequest = authRepository.getSignInRequest()
@@ -79,7 +76,7 @@ class RegisterViewModel(
             val displayName = user.displayName ?: ""
             val email = user.email ?: ""
 
-            val username = if (displayName.isNotEmpty()) displayName else email.substringBefore("@")
+            val username = displayName.ifEmpty { email.substringBefore("@") }
 
             val nameParts = displayName.split(" ", limit = 2)
             val firstName = nameParts.getOrNull(0) ?: ""

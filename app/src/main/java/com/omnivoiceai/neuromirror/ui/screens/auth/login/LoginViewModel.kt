@@ -46,20 +46,6 @@ class LoginViewModel(
         }
     }
 
-    fun signUpWithEmail(email: String, password: String) {
-        viewModelScope.launch {
-            _loginState.value = LoginState.Loading
-            authRepository.signUp(email, password).fold(
-                onSuccess = { user ->
-                    _loginState.value = LoginState.Success(user)
-                },
-                onFailure = { exc ->
-                    _loginState.value = LoginState.Error(exc.localizedMessage ?: "Registrazione fallita")
-                }
-            )
-        }
-    }
-
     fun getOneTapClient(): SignInClient = authRepository.getOneTapClient()
     fun getSignInRequest() = authRepository.getSignInRequest()
 
