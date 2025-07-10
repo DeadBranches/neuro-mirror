@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +43,8 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
         SettingLineItem(title = languageTitle, navController = {
             navController.navigate(NavigationRoute.SettingsSubScreen("Language"))
         })
+
+        HorizontalDivider()
 
         Spacer(modifier = Modifier.height(24.dp))
         
