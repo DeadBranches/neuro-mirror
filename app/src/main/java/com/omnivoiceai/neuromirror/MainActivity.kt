@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -70,8 +73,9 @@ class MainActivity : ComponentActivity() {
                 val themeViewModel = koinViewModel<ThemeViewModel>()
                 val themeState by themeViewModel.state.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
+                val snackbarColor = remember { mutableStateOf(Color.Unspecified) }
 
-                HandleUiEvents(snackbarHostState)
+                HandleUiEvents(snackbarHostState, snackbarColor)
 
 
                 NeuroMirrorTheme(
@@ -101,7 +105,15 @@ class MainActivity : ComponentActivity() {
                         topBar = { if(appBarVisible) AppBar(navController) },
                         modifier = Modifier.fillMaxSize(),
                         floatingActionButton = { if(fabVisible) Fab(navController = navController) },
-                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        snackbarHost = {
+                            SnackbarHost(snackbarHostState) { data ->
+                                Snackbar(
+                                    snackbarData = data,
+                                    containerColor = snackbarColor.value,
+                                    contentColor = Color.White
+                                )
+                            }
+                        }
                     ) { innerPadding ->
                         NavGraph(
                             navController,

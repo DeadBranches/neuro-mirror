@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.badge.Badge
@@ -18,7 +20,7 @@ import com.omnivoiceai.neuromirror.utils.toUiNotification
  *   package com.omnivoiceai.neuromirror.ui.screens.profile.components.getBadgeLabel
 */
 
-fun getBadgeLabel(context: Context, badge: Badge): String {
+private fun getBadgeLabel(context: Context, badge: Badge): String {
     val parts = badge.badgeKey.split("_")
     if (parts.size < 2) return badge.badgeKey
 
@@ -46,7 +48,7 @@ fun getBadgeLabel(context: Context, badge: Badge): String {
     }.trim()
 }
 
-fun resolveMessage(context: Context, data: UiNotificationData): String {
+private fun resolveMessage(context: Context, data: UiNotificationData): String {
     return when (val msg = data.message) {
         is String -> msg
         is Badge -> context.getString(
@@ -61,17 +63,15 @@ fun resolveMessage(context: Context, data: UiNotificationData): String {
     }
 }
 
-
-
-
 @Composable
-fun HandleUiEvents(snackbarHostState: SnackbarHostState) {
+fun HandleUiEvents(snackbarHostState: SnackbarHostState, snackbarColor: MutableState<Color>) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         UiEventBus.events.collect { event ->
             val data = event.toUiNotification()
             if (data != null) {
+                snackbarColor.value = data.color
                 val prefix = data.emoji?.let { "$it " } ?: ""
                 val message = resolveMessage(context, data)
                 snackbarHostState.showSnackbar(prefix + message)
