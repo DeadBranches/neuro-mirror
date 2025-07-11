@@ -16,11 +16,7 @@ import com.omnivoiceai.neuromirror.ui.events.UiNotificationData
 import com.omnivoiceai.neuromirror.utils.UiEventBus
 import com.omnivoiceai.neuromirror.utils.toUiNotification
 
-/*** BRUTTISSIMO!!! CAPIRE COME USARE:
- *   package com.omnivoiceai.neuromirror.ui.screens.profile.components.getBadgeLabel
-*/
-
-private fun getBadgeLabel(context: Context, badge: Badge): String {
+fun getBadgeLabel(context: Context, badge: Badge): String {
     val parts = badge.badgeKey.split("_")
     if (parts.size < 2) return badge.badgeKey
 

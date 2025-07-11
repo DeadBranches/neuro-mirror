@@ -5,23 +5,14 @@ import com.omnivoiceai.neuromirror.domain.model.LoginEventType
 import com.omnivoiceai.neuromirror.ui.events.UIEvent
 import com.omnivoiceai.neuromirror.ui.events.UiNotificationData
 import com.omnivoiceai.neuromirror.ui.events.UiNotificationType
-import com.omnivoiceai.neuromirror.ui.theme.Error
-import com.omnivoiceai.neuromirror.ui.theme.Info
-import com.omnivoiceai.neuromirror.ui.theme.Notification
 import com.omnivoiceai.neuromirror.ui.theme.Purple40
-import com.omnivoiceai.neuromirror.ui.theme.Success
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 
 fun UIEvent.toUiNotification(): UiNotificationData? {
     return when (this) {
         is UIEvent.ShowNotification -> {
-            val color = when (type) {
-                UiNotificationType.Success -> Success
-                UiNotificationType.Error -> Error
-                UiNotificationType.Info -> Info
-                UiNotificationType.Notification -> Notification
-            }
+            val color = type.color
             UiNotificationData(message, icon, color)
         }
 

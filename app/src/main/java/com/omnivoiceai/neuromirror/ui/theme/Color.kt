@@ -10,10 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val Success = Color(0xFF4CAF50)
-val Error = Color(0xFFF44336)
-val Info = Color.Gray
-val Notification = Color(0xFF2196F3)
+val SuccessColor = Color(0xFF4CAF50)
+val ErrorColor = Color(0xFFF44336)
+val InfoColor = Color.Gray
+val NotificationColor = Color(0xFF2196F3)
 
 val GoldBadge = Color(0xFFFFC107)
 val SilverBadge = Color(0xFFB0BEC5)
