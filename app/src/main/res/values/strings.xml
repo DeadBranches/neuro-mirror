@@ -4,6 +4,7 @@
     <string name="home_screen_name">Home Screen</string>
     <string name="splash_screen_name">Splash Screen</string>
     <string name="profile_screen_name">Profile</string>
+    <string name="chat_screen_name">NeuroMirror AI</string>
     <string name="unknown_screen_name">Unknown Screen</string>
     <string name="back_button_description">Go Back</string>
     <string name="menu_button_description">Menu</string>
@@ -118,4 +119,5 @@
     <string name="start_conversation">Start Conversation</string>
     <string name="continue_conversation">Continue Conversation</string>
     <string name="generation_questions">Generating questions…</string>
+    <string name="loading_response">I am thinking…</string>
 </resources>

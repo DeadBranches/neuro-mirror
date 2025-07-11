@@ -43,6 +43,8 @@ fun AppBar(navController: NavHostController, modifier: Modifier = Modifier) {
             R.string.settings_page_title)
         backStackEntry?.destination?.hasRoute<NavigationRoute.ProfileScreen>() == true -> stringResource(
             R.string.profile_screen_name)
+        backStackEntry?.destination?.route?.contains("ChatScreen") == true -> stringResource(
+            R.string.chat_screen_name)
         backStackEntry?.arguments?.getString("title") == "Language" -> stringResource(
             R.string.language)
         else -> backStackEntry?.arguments?.getString("title")
