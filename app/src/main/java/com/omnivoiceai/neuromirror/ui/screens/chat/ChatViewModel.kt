@@ -7,6 +7,7 @@ import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
 import com.omnivoiceai.neuromirror.data.database.thread.Message
 import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
 import com.omnivoiceai.neuromirror.data.database.thread.Thread
+import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
@@ -43,7 +44,8 @@ class ChatViewModel(
     private val introspectionRepository: IntrospectionRepository,
     private val noteRepository: NoteRepository,
     private val questionRepository: QuestionRepository,
-    private val threadRepository: ThreadRepository
+    private val threadRepository: ThreadRepository,
+    private val badgeRepository: BadgeRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ChatState())
@@ -148,7 +150,8 @@ class ChatViewModel(
                 content = userMessage,
                 isUser = true
             )
-            
+
+
             _state.value = currentState.copy(
                 messages = currentState.messages + userChatMessage,
                 currentMessage = "",
@@ -167,7 +170,7 @@ class ChatViewModel(
                         content = userMessage,
                         timestamp = now
                     ))
-                    
+
                     val response = introspectionRepository.sendMessage(
                         userMessage = userMessage,
                         threadId = threadId.toString()
@@ -180,7 +183,7 @@ class ChatViewModel(
                         content = response.body,
                         timestamp = Date()
                     ))
-                    
+
                     // Add assistant response to UI
                     val assistantMessage = ChatMessage(
                         content = response.body,
@@ -191,7 +194,6 @@ class ChatViewModel(
                         messages = _state.value.messages + assistantMessage,
                         isLoading = false
                     )
-                    
                 } catch (e: Exception) {
                     Logger.error("Error sending message", e)
                     val errorMessage = ChatMessage(

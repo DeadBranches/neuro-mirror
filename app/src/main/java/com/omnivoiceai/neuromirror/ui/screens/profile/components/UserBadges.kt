@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChatBubble
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Psychology
-import androidx.compose.material.icons.outlined.WbSunny
+import androidx.compose.material.icons.outlined.QuestionMark
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -194,7 +194,7 @@ private fun getBadgeIcon(badge: Badge): ImageVector {
     return when (badge.category) {
         BadgeCategory.NOTE -> Icons.Outlined.Create
         BadgeCategory.EMOTION -> Icons.Outlined.Psychology
-        BadgeCategory.MESSAGE ->  Icons.Outlined.WbSunny
-        BadgeCategory.QUESTION -> Icons.Outlined.Favorite
+        BadgeCategory.MESSAGE ->  Icons.Outlined.ChatBubble
+        BadgeCategory.QUESTION -> Icons.Outlined.QuestionMark
     }
 }

@@ -32,7 +32,7 @@ class AuthRepository(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
                 .setServerClientId(context.getString(R.string.default_web_client_id))
-                .setFilterByAuthorizedAccounts(false) // Mostra anche account non salvati
+                .setFilterByAuthorizedAccounts(false)
                 .build()
         )
         .setAutoSelectEnabled(false)

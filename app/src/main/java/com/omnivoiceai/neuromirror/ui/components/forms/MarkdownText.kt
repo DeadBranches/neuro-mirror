@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MarkdownText(
     text: String,
+    isUser: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -88,23 +89,10 @@ fun MarkdownText(
         modifier =  Modifier.padding(12.dp),
         style = MaterialTheme.typography.bodyLarge.copy(
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            color = if (isUser)
+                MaterialTheme.colorScheme.onPrimary
+            else
+                MaterialTheme.colorScheme.onSurfaceVariant
         ),
     )
-
-//    ClickableText(
-//        text = annotatedText,
-//        modifier =  Modifier.padding(12.dp),
-//        style = MaterialTheme.typography.bodyLarge.copy(
-//            fontSize = 16.sp,
-//            color = MaterialTheme.colorScheme.onSurface
-//        ),
-//        onClick = { offset ->
-//            annotatedText.getStringAnnotations(tag = "URL", start = offset, end = offset)
-//                .firstOrNull()?.let { stringAnnotation ->
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(stringAnnotation.item))
-//                    context.startActivity(intent)
-//                }
-//        }
-//    )
 }

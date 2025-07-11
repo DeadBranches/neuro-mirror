@@ -9,14 +9,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -35,6 +39,10 @@ import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
 
+val LocalAppContext = staticCompositionLocalOf<Context> {
+    error("LocalAppContext not provided")
+}
+
 class MainActivity : ComponentActivity() {
     
     private val requestNotificationPermission = registerForActivityResult(
@@ -46,8 +54,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-//        Logger.d("On Create called")
-//        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
 
         // Request notification permission for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -67,9 +73,9 @@ class MainActivity : ComponentActivity() {
                 val themeViewModel = koinViewModel<ThemeViewModel>()
                 val themeState by themeViewModel.state.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
+                val snackbarColor = remember { mutableStateOf(Color.Unspecified) }
 
-                HandleUiEvents(snackbarHostState)
-
+                HandleUiEvents(snackbarHostState, snackbarColor)
 
                 NeuroMirrorTheme(
                     darkTheme = themeState.isDarkTheme
@@ -98,15 +104,26 @@ class MainActivity : ComponentActivity() {
                         topBar = { if(appBarVisible) AppBar(navController) },
                         modifier = Modifier.fillMaxSize(),
                         floatingActionButton = { if(fabVisible) Fab(navController = navController) },
-                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        snackbarHost = {
+                            SnackbarHost(snackbarHostState) { data ->
+                                Snackbar(
+                                    snackbarData = data,
+                                    containerColor = snackbarColor.value,
+                                    contentColor = Color.White
+                                )
+                            }
+                        }
                     ) { innerPadding ->
-                        NavGraph(navController, theme=themeViewModel, modifier = Modifier.padding(innerPadding))
+                        NavGraph(
+                            navController,
+                            theme=themeViewModel,
+                            modifier = Modifier.padding(innerPadding).imePadding()
+                        )
                     }
                 }
             }
         }
     }
-
 
     override fun attachBaseContext(newBase: Context) {
         val language = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
@@ -114,28 +131,4 @@ class MainActivity : ComponentActivity() {
         val updatedContext = newBase.updateLocale(language)
         super.attachBaseContext(updatedContext)
     }
-
-
-//    override fun onStart() {
-//        super.onStart()
-//        Logger.d("On start called")
-////        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        Logger.d("On resume called")
-////        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        Logger.d("On pause called")
-////        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
-//    }
-}
-
-
-val LocalAppContext = staticCompositionLocalOf<Context> {
-    error("LocalAppContext not provided")
 }

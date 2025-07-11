@@ -1,6 +1,7 @@
 package com.omnivoiceai.neuromirror.data.repositories
 
 import com.omnivoiceai.neuromirror.data.database.thread.Message
+import com.omnivoiceai.neuromirror.data.database.thread.MessageRole
 import com.omnivoiceai.neuromirror.data.database.thread.Thread
 import com.omnivoiceai.neuromirror.data.database.thread.ThreadDAO
 import com.omnivoiceai.neuromirror.data.database.thread.ThreadWithMessages
@@ -18,4 +19,6 @@ class ThreadRepository(private val threadDao: ThreadDAO) {
     fun getMessagesByThreadId(threadId: Int): Flow<List<Message>> = threadDao.getMessagesByThreadId(threadId)
     
     fun getThreadsWithMessagesByNoteId(noteId: Int): Flow<List<ThreadWithMessages>> = threadDao.getThreadsWithMessagesByNoteId(noteId)
+
+    fun countAllMessages(role: MessageRole = MessageRole.USER) = threadDao.countAllMessages(role)
 } 

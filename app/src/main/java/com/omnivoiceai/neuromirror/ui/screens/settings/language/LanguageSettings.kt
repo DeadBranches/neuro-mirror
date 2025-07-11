@@ -1,6 +1,7 @@
 package com.omnivoiceai.neuromirror.ui.screens.settings.language
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.omnivoiceai.neuromirror.domain.model.Language
 import com.omnivoiceai.neuromirror.ui.components.forms.RadioSelector
 
@@ -10,6 +11,6 @@ fun LanguageSettings(state: LanguageState, onLanguageSelect: (Language) -> Unit)
         items = Language.entries,
         selectedItem = state.language,
         onItemSelected = onLanguageSelect,
-        labelProvider = { it.toString() }
+        labelProvider = { stringResource(it.labelResId) }
     )
 }

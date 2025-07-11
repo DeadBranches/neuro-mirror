@@ -1,7 +1,12 @@
 package com.omnivoiceai.neuromirror.data.repositories
 
 import android.content.Context
-import com.omnivoiceai.neuromirror.data.remote.*
+import com.omnivoiceai.neuromirror.data.remote.AgentType
+import com.omnivoiceai.neuromirror.data.remote.ChatDataSource
+import com.omnivoiceai.neuromirror.data.remote.ChatIntrospectionResponse
+import com.omnivoiceai.neuromirror.data.remote.IntrospectionResponse
+import com.omnivoiceai.neuromirror.data.remote.QuestionIntrospectionResponse
+import com.omnivoiceai.neuromirror.data.remote.SendMessageRequest
 import com.omnivoiceai.neuromirror.utils.Logger
 import com.omnivoiceai.neuromirror.utils.encryptMessage
 import kotlinx.serialization.json.Json
@@ -52,9 +57,8 @@ class IntrospectionNeuroImpl(
         threadId: String,
         agentType: AgentType,
     ): IntrospectionResponse {
-        val publicKeyPath = "public.key"
         val plainText = userMessage
-        val encryptedMessage = encryptMessage(context, plainText, publicKeyPath)
+        val encryptedMessage = encryptMessage(context, plainText)
 
         val request = SendMessageRequest(
             messageContent = encryptedMessage,

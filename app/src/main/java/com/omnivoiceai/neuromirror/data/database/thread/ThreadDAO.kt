@@ -25,6 +25,9 @@ interface ThreadDAO {
 
     @Query("SELECT * FROM messages")
     fun getAllMessagesRaw(): List<Message>
+
+    @Query("SELECT Count(*) FROM messages WHERE role = :role")
+    fun countAllMessages(role: MessageRole = MessageRole.USER): Int
     
     @Query("SELECT * FROM Thread WHERE note_id = :noteId")
     fun getThreadsByNoteId(noteId: Int): Flow<List<Thread>>

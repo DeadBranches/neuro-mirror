@@ -29,6 +29,10 @@ interface QuestionDAO {
     suspend fun getAll(): List<Question>
 
     @Transaction
+    @Query("SELECT COUNT(DISTINCT note_id) FROM Question")
+    suspend fun getAllGroupedByNoteId(): Int
+
+    @Transaction
     @Query("SELECT * FROM OneShotQuestion")
     suspend fun getAllOneShots(): List<OneShotQuestion>
 

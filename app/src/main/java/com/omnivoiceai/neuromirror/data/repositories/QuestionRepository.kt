@@ -101,4 +101,7 @@ class QuestionRepository(private val questionDao: QuestionDAO) {
         return false
     }
 
+    suspend fun getAll() = questionDao.getAll()
+    suspend fun getAllGrouped(): Int = questionDao.getAllGroupedByNoteId()
+
 } 

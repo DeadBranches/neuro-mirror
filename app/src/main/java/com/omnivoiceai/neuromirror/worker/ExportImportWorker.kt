@@ -72,13 +72,13 @@ class ExportImportWorker(
             OutputStreamWriter(outputStream).use { it.write(json) }
             outputStream?.flush()
             outputStream?.close()
-//            File(export).writeText(json)
 
             Logger.d("Export completed with ${backupData.size} categories")
             UiEventBus.showNotification("Exported with success")
             return Result.success()
         } catch (e: Exception) {
             Logger.error("Export failed", e)
+            UiEventBus.showError("Export failed")
             return Result.failure()
         }
     }
@@ -94,14 +94,8 @@ class ExportImportWorker(
         }
     }
 
-    private suspend fun importData(): Result {
 
-        val uriString = inputData.getString("import_uri") ?: return Result.failure()
-        val uri = uriString.toUri()
-
-        val jsonObject = getJsonFromPickedFile(applicationContext, uri)
-            ?: return Result.failure()
-
+    private suspend fun importFromJsonFile(jsonObject: JSONObject){
         val noteList: List<Note> = gson.fromJson(
             jsonObject.getJSONArray("notes").toString(),
             object : TypeToken<List<Note>>() {}.type
@@ -154,6 +148,21 @@ class ExportImportWorker(
 
         Logger.d("Import completed with ${noteList.size} notes, ${threads.size} threads")
         UiEventBus.showNotification("Imported with success")
-        return Result.success()
+    }
+
+    private suspend fun importData(): Result {
+        val uriString = inputData.getString("import_uri") ?: return Result.failure()
+        val uri = uriString.toUri()
+
+        try {
+            val jsonObject = getJsonFromPickedFile(applicationContext, uri)
+                ?: return Result.failure()
+            importFromJsonFile(jsonObject)
+            return Result.success()
+        } catch (e: Exception){
+            Logger.error("Import failed", e)
+            UiEventBus.showError("Import failed")
+            return Result.failure()
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.omnivoiceai.neuromirror.domain.model
 
-enum class Language(val code: String) {
-    English("en"),
-    Italian("it")
+import androidx.annotation.StringRes
+import com.omnivoiceai.neuromirror.R
+
+enum class Language(val code: String, @StringRes val labelResId: Int) {
+    English("en", R.string.language_english),
+    Italian("it", R.string.language_italian)
 }

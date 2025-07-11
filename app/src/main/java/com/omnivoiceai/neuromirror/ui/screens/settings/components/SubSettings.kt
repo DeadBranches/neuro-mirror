@@ -33,8 +33,7 @@ fun SettingsSubScreen(
 
     val content: @Composable ColumnScope.() -> Unit = when (title) {
         stringResource(R.string.settings_page_theme_title) -> { { ThemeSettings(themeState, themeViewModel::changeTheme) } }
-        stringResource(R.string.settings_notifications) -> { { NotificationTest() } }
-//        stringResource(R.string.language) -> {
+        stringResource(R.string.settings_notifications) -> { { NotificationScreen() } }
         "Language" -> {
             {
                 LanguageSettings(
@@ -44,7 +43,8 @@ fun SettingsSubScreen(
                     }
                 )
             }
-        }        else -> { { Text("Sezione non trovata.") } }
+        }
+        else -> { { Text(stringResource(R.string.not_found)) } }
     }
 
     Column(modifier = modifier.fillMaxSize().padding(horizontal = 16.dp), content = content)

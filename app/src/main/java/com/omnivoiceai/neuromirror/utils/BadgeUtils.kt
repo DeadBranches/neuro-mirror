@@ -1,13 +1,18 @@
 package com.omnivoiceai.neuromirror.utils
 
 import androidx.compose.ui.graphics.Color
+import com.omnivoiceai.neuromirror.ui.theme.BasicBadge
+import com.omnivoiceai.neuromirror.ui.theme.BronzeBadge
+import com.omnivoiceai.neuromirror.ui.theme.GenericBadge
+import com.omnivoiceai.neuromirror.ui.theme.GoldBadge
+import com.omnivoiceai.neuromirror.ui.theme.SilverBadge
 
 fun getBadgeColorForLevel(level: Int): Color {
     return when (level) {
-        10 -> Color(0xFFFFC107)
-        5 -> Color(0xFFB0BEC5)
-        3 -> Color(0xFFB87333)
-        1 -> Color(0xFF42A5F5)
-        else -> Color(0xFFBDBDBD)
+        10 -> GoldBadge
+        5 -> SilverBadge
+        3 -> BronzeBadge
+        1 -> BasicBadge
+        else -> GenericBadge
     }
 }

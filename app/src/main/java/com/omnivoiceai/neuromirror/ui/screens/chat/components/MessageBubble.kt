@@ -37,7 +37,7 @@ fun MessageBubble(
                     MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
-            MarkdownText(message.content)
+            MarkdownText(message.content, message.isUser)
         }
     }
 }

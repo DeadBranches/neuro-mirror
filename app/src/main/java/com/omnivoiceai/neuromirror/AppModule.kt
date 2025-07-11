@@ -3,10 +3,11 @@ package com.omnivoiceai.neuromirror
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.omnivoiceai.neuromirror.data.database.AppDatabase
+import com.omnivoiceai.neuromirror.data.database.MIGRATION_1_2
+import com.omnivoiceai.neuromirror.data.database.MIGRATION_2_3
+import com.omnivoiceai.neuromirror.data.database.MIGRATION_3_4
 import com.omnivoiceai.neuromirror.data.ml.EmotionModel
 import com.omnivoiceai.neuromirror.data.remote.ChatDataSource
 import com.omnivoiceai.neuromirror.data.remote.createChatDataSource
@@ -21,6 +22,7 @@ import com.omnivoiceai.neuromirror.data.repositories.ProfileRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThemeRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
+import com.omnivoiceai.neuromirror.domain.model.Config
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterViewModel
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
@@ -47,66 +49,8 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val Context.dataStore by preferencesDataStore("theme")
+val Context.dataStore by preferencesDataStore(Config.PREFERENCE_DATA_STORE)
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `question_answers` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `question_id` INTEGER NOT NULL,
-                `answer_text` TEXT,
-                `selected_option_index` INTEGER,
-                `selected_option_text` TEXT,
-                `created_at` INTEGER NOT NULL
-            )
-        """
-        )
-    }
-}
-
-val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        // Create Thread table (using class name as table name)
-        database.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `Thread` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `note_id` INTEGER NOT NULL,
-                `note_firebase_id` TEXT,
-                `title` TEXT NOT NULL,
-                `date` INTEGER NOT NULL,
-                `last_updated` INTEGER NOT NULL,
-                `firebase_id` TEXT,
-                `is_synced` INTEGER NOT NULL DEFAULT 0,
-                FOREIGN KEY(`note_id`) REFERENCES `Note`(`id`) ON DELETE CASCADE
-            )
-        """
-        )
-        
-        // Create messages table
-        database.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `messages` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `thread_id` INTEGER NOT NULL,
-                `role` TEXT NOT NULL,
-                `content` TEXT NOT NULL,
-                `timestamp` INTEGER NOT NULL,
-                `message_type` TEXT NOT NULL DEFAULT 'TEXT',
-                `firebase_id` TEXT,
-                `is_synced` INTEGER NOT NULL DEFAULT 0,
-                FOREIGN KEY(`thread_id`) REFERENCES `Thread`(`id`) ON DELETE CASCADE
-            )
-        """
-        )
-        
-        // Create indexes for better performance
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_Thread_note_id` ON `Thread` (`note_id`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_messages_thread_id` ON `messages` (`thread_id`)")
-    }
-}
 
 val appModule = module {
     single {
@@ -131,14 +75,20 @@ val appModule = module {
     }
     single<ChatDataSource> {
         Ktorfit.Builder()
-//            .baseUrl("http://192.168.1.226:8000/")
-            .baseUrl("https://api.ai.digitalnext.business/")
+            .baseUrl(Config.BASE_URL)
             .httpClient(get<HttpClient>())
             .build()
             .createChatDataSource()
     }
-
     single { get<Context>().dataStore }
+    single {
+        Room.databaseBuilder(
+            get(),
+            AppDatabase::class.java,
+            Config.DATABASE_NAME
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+            .build()
+    }
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single { ThemeRepository(get()) }
     single { LanguageRepository(get())}
@@ -147,30 +97,19 @@ val appModule = module {
     viewModel { EmotionViewModel(get()) }
     viewModel { BadgeViewModel(get()) }
     viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get(), get()) }
-    viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName))) }
-    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get()) }
-    single {
-        Room.databaseBuilder(
-            get(),
-            AppDatabase::class.java,
-            "note-list"
-        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
-         .fallbackToDestructiveMigration() // Remove this after successful migration
-         .build()
-    }
+    viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName)), get()) }
+    viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get(), get()) }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
     single { QuestionRepository(get<AppDatabase>().questionDao()) }
     single { ThreadRepository(get<AppDatabase>().threadDao()) }
     single { ProfileRepository(get()) }
     single { BadgeRepository(get<AppDatabase>().badgeDao()) }
     single { AuthRepository(get(), get()) }
-
     viewModel { ProfileViewModel(get()) }
     single { EmotionModel(get()) }
     single { EmotionRepository(get()) }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
-
     workerOf(::ExportImportWorker)
     factory(named("Neuro")) { IntrospectionNeuroImpl(get(), get()) } bind IntrospectionRepository::class
 }
