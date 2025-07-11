@@ -103,8 +103,8 @@
     <string name="general">Generali</string>
     <string name="access">Account utente</string>
     <string name="data_operation">Gestione Dati</string>
-    <string name="export">Esporta dati in JSON</string>
-    <string name="import_data">Importa JSON da file</string>
+    <string name="export">Esporta dati in file JSON</string>
+    <string name="import_data">Importa dati da file JSON</string>
     <string name="version">Versione App</string>
     <string name="theme_light">Chiaro</string>
     <string name="theme_dark">Scuro</string>
