@@ -35,6 +35,10 @@ import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
 
+val LocalAppContext = staticCompositionLocalOf<Context> {
+    error("LocalAppContext not provided")
+}
+
 class MainActivity : ComponentActivity() {
     
     private val requestNotificationPermission = registerForActivityResult(
@@ -46,8 +50,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-//        Logger.d("On Create called")
-//        Toast.makeText(this, "$TAG onCreate", Toast.LENGTH_LONG).show()
 
         // Request notification permission for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -115,27 +117,4 @@ class MainActivity : ComponentActivity() {
         super.attachBaseContext(updatedContext)
     }
 
-
-//    override fun onStart() {
-//        super.onStart()
-//        Logger.d("On start called")
-////        Toast.makeText(this, "$TAG onStart", Toast.LENGTH_LONG).show()
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        Logger.d("On resume called")
-////        Toast.makeText(this, "$TAG onResume", Toast.LENGTH_LONG).show()
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        Logger.d("On pause called")
-////        Toast.makeText(this, "$TAG onPause", Toast.LENGTH_LONG).show()
-//    }
-}
-
-
-val LocalAppContext = staticCompositionLocalOf<Context> {
-    error("LocalAppContext not provided")
 }

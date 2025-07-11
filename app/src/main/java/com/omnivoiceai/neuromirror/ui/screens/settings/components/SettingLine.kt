@@ -16,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingLineItem(title: String, navController: () -> Unit) {
+fun SettingLineItem(title: String, onClick: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = navController)
+            .clickable(onClick = onClick)
             .padding(vertical = 16.dp)
     ) {
         Text(

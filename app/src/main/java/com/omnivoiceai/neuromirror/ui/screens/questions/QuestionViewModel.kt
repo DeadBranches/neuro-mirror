@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.data.database.note.Note
 import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestionsAndAnswers
+import com.omnivoiceai.neuromirror.data.repositories.BadgeRepository
 import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 class QuestionViewModel(
     private val questionRepository: QuestionRepository,
     private val noteRepository: NoteRepository,
-    private val introspectionRepository: IntrospectionRepository
+    private val introspectionRepository: IntrospectionRepository,
+    private val badgeRepository: BadgeRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -60,6 +62,8 @@ class QuestionViewModel(
 
                 val updatedNote = note.copy(isEvaluated = true)
                 noteRepository.upsert(updatedNote)
+
+                badgeRepository.checkQuestionMilestones(questionRepository.getAllGrouped())
 
                 navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
                     popUpTo(NavigationRoute.LoadingScreen(note.id)) { inclusive = true }

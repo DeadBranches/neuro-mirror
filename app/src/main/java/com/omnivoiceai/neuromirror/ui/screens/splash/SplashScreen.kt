@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,7 +56,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
                 .padding(vertical = 4.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login))
         }
         Button(
             onClick = { navController.navigate(NavigationRoute.RegisterScreen) },
@@ -65,7 +65,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
                 .padding(vertical = 4.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text("Register")
+            Text(stringResource(R.string.register))
         }
         EmptySpacer()
         GoToHomeButton(navController = navController)

@@ -55,6 +55,7 @@
     <string name="test_notification_scheduled">Notifica di test programmata per 60 secondi</string>
     <string name="login">Accedi</string>
     <string name="register">Registrati</string>
+    <string name="logout">Disconnettiti</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="repeat_password">Ripeti Password</string>
@@ -69,7 +70,7 @@
     <string name="badge_suffix_1">1 volta</string>
     <string name="badge_suffix_n">volte</string>
     <string name="badge_prefix_note">Scritto note</string>
-    <string name="badge_prefix_question">Generato domande</string>
+    <string name="badge_prefix_question">Generate domande</string>
     <string name="badge_prefix_message">Inviati messaggi</string>
     <string name="badge_prefix_emotion">Rilevata:</string>
 
@@ -98,5 +99,10 @@
     <string name="welcome_chat">Scrivi i tuoi pensieri e sentimenti…</string>
     <string name="login_success">Login effettuato!</string>
     <string name="logout_success">Logout effettuato!</string>
+    <string name="general">Generali</string>
+    <string name="access">Accesso</string>
+    <string name="data_operation">Gestione Dati</string>
+    <string name="export">Esporta dati in JSON</string>
+    <string name="import_data">Importa JSON da file</string>
 
 </resources>
