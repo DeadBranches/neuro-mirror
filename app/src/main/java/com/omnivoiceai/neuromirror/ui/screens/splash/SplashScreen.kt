@@ -35,7 +35,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
     ) {
         Text("Welcome to NeuroMirror", style = MaterialTheme.typography.headlineLarge)
         Text(
-            "A cognitive-emotional diary that reflects who you are",
+            stringResource(R.string.app_description),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontStyle = FontStyle.Italic,
