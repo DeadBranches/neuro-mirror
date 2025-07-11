@@ -20,6 +20,7 @@ import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.BackupButtons
+import com.omnivoiceai.neuromirror.ui.screens.settings.components.GitHubLink
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.SettingLineItem
 import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 
@@ -97,5 +98,6 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall
         )
+        GitHubLink()
     }
 }

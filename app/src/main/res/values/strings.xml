@@ -109,4 +109,5 @@
     <string name="theme_system">System</string>
     <string name="language_english">English</string>
     <string name="language_italian">Italian</string>
+    <string name="github_link">Go to GitHub repository</string>
 </resources>
