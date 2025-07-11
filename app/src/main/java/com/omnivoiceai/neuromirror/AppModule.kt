@@ -171,8 +171,7 @@ val appModule = module {
             get(),
             AppDatabase::class.java,
             "note-list"
-        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
-         .fallbackToDestructiveMigration() // Remove this after successful migration
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
          .build()
     }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
