@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -59,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.omnivoiceai.neuromirror.R
+import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 
 @Composable
@@ -180,7 +178,7 @@ fun RegisterScreen(
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                EmptySpacer(height = 8.dp)
 
                 OutlinedTextField(
                     value = username,
@@ -307,7 +305,7 @@ fun RegisterScreen(
                     } else null
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                EmptySpacer(height = 8.dp)
 
                 Button(
                     onClick = { 
@@ -399,12 +397,12 @@ fun RegisterScreen(
                                 modifier = Modifier.size(18.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
+                        EmptySpacer(width = 8.dp)
                         Text(stringResource(R.string.login_with_google))
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                EmptySpacer(height = 8.dp)
 
                 Row(
                     horizontalArrangement = Arrangement.Center,

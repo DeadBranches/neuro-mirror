@@ -21,8 +21,5 @@ sealed class UIEvent {
         val icon: String? = null
     ) : UIEvent()
 
-    object LoginSuccess : UIEvent()
-    object Logout : UIEvent()
-
     data class BadgeUnlocked(val badge: Badge, val emoji: String? = null) : UIEvent()
 }
