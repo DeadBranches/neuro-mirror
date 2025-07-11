@@ -100,9 +100,15 @@
     <string name="login_success">Login effettuato!</string>
     <string name="logout_success">Logout effettuato!</string>
     <string name="general">Generali</string>
-    <string name="access">Accesso</string>
+    <string name="access">Account utente</string>
     <string name="data_operation">Gestione Dati</string>
     <string name="export">Esporta dati in JSON</string>
     <string name="import_data">Importa JSON da file</string>
+    <string name="version">App Version</string>
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_system">Sistema</string>
+    <string name="language_english">Inglese</string>
+    <string name="language_italian">Italiano</string>
 
 </resources>

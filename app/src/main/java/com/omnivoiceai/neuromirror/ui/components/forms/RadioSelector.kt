@@ -21,7 +21,7 @@ fun <T> RadioSelector(
     items: List<T>,
     selectedItem: T,
     onItemSelected: (T) -> Unit,
-    labelProvider: (T) -> String
+    labelProvider: @Composable (T) -> String
 ) {
     Column(Modifier.selectableGroup()) {
         items.forEach { item ->

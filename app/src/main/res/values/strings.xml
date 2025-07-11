@@ -99,9 +99,14 @@
     <string name="login_success">Login with success</string>
     <string name="logout_success">Logout with success</string>
     <string name="general">General</string>
-    <string name="access">Access</string>
+    <string name="access">Account</string>
     <string name="data_operation">Database Management</string>
     <string name="export">Export data in JSON</string>
     <string name="import_data">Import JSON data</string>
-
+    <string name="version">App Version</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+    <string name="language_english">English</string>
+    <string name="language_italian">Italian</string>
 </resources>

@@ -14,7 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.omnivoiceai.neuromirror.BuildConfig
 import com.omnivoiceai.neuromirror.R
+import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.settings.components.BackupButtons
@@ -25,6 +27,13 @@ import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostController, themeViewModel: ThemeViewModel){
     val themeState by themeViewModel.state.collectAsStateWithLifecycle()
     val currentUser by loginViewModel.currentUser.collectAsStateWithLifecycle()
+
+    val versionCode = BuildConfig.VERSION_CODE
+    val versionName = BuildConfig.VERSION_NAME
+    val applicationId = BuildConfig.APPLICATION_ID
+
+    val style = MaterialTheme.typography.headlineSmall
+
 
     Column (
         modifier = Modifier
@@ -73,8 +82,18 @@ fun SettingsScreen(loginViewModel: LoginViewModel, navController: NavHostControl
                 }
             })
         }
-//        EmptySpacer(height = 48.dp)
-        Text("NeuroMirror v.1.0.0",
+        HorizontalDivider()
+
+        Text(stringResource(R.string.version),
+            modifier = Modifier.padding(top = 16.dp ),
+            style = MaterialTheme.typography.headlineSmall,
+        )
+        EmptySpacer()
+        Text(stringResource(R.string.app_name) + " " + versionName,
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text(applicationId,
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall
         )
