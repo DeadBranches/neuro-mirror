@@ -3,12 +3,13 @@ package com.omnivoiceai.neuromirror.ui.screens.settings.components
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.omnivoiceai.neuromirror.R
 
 @Composable
-fun NotificationPreferences() {
+fun NotificationPreferences(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     SettingLineItem(
@@ -18,7 +19,6 @@ fun NotificationPreferences() {
             Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
             }
-
         context.startActivity(intent)
     })
 }

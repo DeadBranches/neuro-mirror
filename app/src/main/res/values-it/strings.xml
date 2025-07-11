@@ -114,4 +114,6 @@
     <string name="github_link">Vai al repository GitHub</string>
     <string name="not_now">Non ora!</string>
     <string name="manage_notifications">Gestisci notifiche</string>
+    <string name="not_found">Non trovata!</string>
+    <string name="welcome_message">Benvenuto in NeuroMirror</string>
 </resources>

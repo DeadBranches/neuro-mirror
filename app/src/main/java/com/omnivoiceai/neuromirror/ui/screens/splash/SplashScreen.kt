@@ -33,7 +33,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to NeuroMirror", style = MaterialTheme.typography.headlineLarge)
+        Text(stringResource(R.string.welcome_message), style = MaterialTheme.typography.headlineLarge)
         Text(
             stringResource(R.string.app_description),
             modifier = Modifier.fillMaxWidth(),
@@ -43,7 +43,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier = Modifier
         )
         Image(
             painter = painterResource(id = R.drawable.welcome),
-            contentDescription = "description",
+            contentDescription = "Logo",
             contentScale = ContentScale.Fit,
             modifier = modifier
                 .fillMaxWidth(0.7f)
