@@ -36,6 +36,7 @@ import com.omnivoiceai.neuromirror.ui.theme.NeuroMirrorTheme
 import com.omnivoiceai.neuromirror.utils.Logger
 import com.omnivoiceai.neuromirror.utils.updateLocale
 import org.koin.androidx.compose.koinViewModel
+import java.util.Locale
 
 private const val TAG = "MainActivity"
 
@@ -126,8 +127,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun attachBaseContext(newBase: Context) {
-        val language = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            .getString("language", "en") ?: "en"
+        val prefs = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val language = prefs.getString("language", null) ?: Locale.getDefault().language
         val updatedContext = newBase.updateLocale(language)
         super.attachBaseContext(updatedContext)
     }
