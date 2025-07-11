@@ -190,7 +190,7 @@ fun NotesQuestionIntrospections(
                             .fillMaxWidth()
                             .padding(vertical = 24.dp)
                     ) {
-                        if(hasConversation){
+                        if(!hasConversation){
                             Text( stringResource(R.string.start_conversation))
                         } else {
                             Text( stringResource(R.string.continue_conversation))
