@@ -34,9 +34,5 @@ class NeuroMirrorApplication: Application(), KoinComponent {
 
         // Schedule daily reminder
         notificationScheduler.scheduleDailyReminder()
-
-
-        
-
     }
 }
