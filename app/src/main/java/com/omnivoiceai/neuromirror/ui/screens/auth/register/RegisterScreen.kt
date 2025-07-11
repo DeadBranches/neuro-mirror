@@ -386,7 +386,7 @@ fun RegisterScreen(
                                 .addOnFailureListener { e ->
                                     Toast.makeText(
                                         context,
-                                        "One Tap non disponibile: ${e.localizedMessage}",
+                                        "${context.getString(R.string.tap_not_available)} ${e.localizedMessage}",
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
