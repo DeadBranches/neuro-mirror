@@ -20,8 +20,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.question.MultipleChoiceQuestion
 import com.omnivoiceai.neuromirror.data.database.question.OneShotQuestion
 import com.omnivoiceai.neuromirror.data.database.question.Question
@@ -159,7 +161,7 @@ fun MultipleChoiceQuestionComponent(
             Spacer(modifier = Modifier.height(16.dp))
             val isCorrect = it == multipleChoiceQuestion.correctIndex
             Text(
-                text = if (isCorrect) "Correct!" else "The correct answer is: ${multipleChoiceQuestion.options[multipleChoiceQuestion.correctIndex]}",
+                text = if (isCorrect) stringResource(R.string.correct) else "${stringResource(R.string.wrong_answer)} ${multipleChoiceQuestion.options[multipleChoiceQuestion.correctIndex]}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )

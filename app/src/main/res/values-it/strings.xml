@@ -5,7 +5,9 @@
     <string name="home_screen_name">Home</string>
     <string name="splash_screen_name">Splash</string>
     <string name="profile_screen_name">Profilo</string>
-    <string name="chat_screen_name">NeuroMirror AI</string>
+    <string name="detail_note_screen_name">Dettaglio nota</string>
+    <string name="introspection_note_screen_name">Questionario introspettivo</string>
+    <string name="chat_screen_name">🧠 NeuroMirror AI</string>
     <string name="unknown_screen_name">Schermata Sconosciuta</string>
     <string name="back_button_description">Torna indietro</string>
     <string name="menu_button_description">Menu</string>
@@ -121,4 +123,6 @@
     <string name="continue_conversation">Continua Conversazione</string>
     <string name="generation_questions">Generando domande…</string>
     <string name="loading_response">Sto pensando…</string>
+    <string name="correct">Corretta!</string>
+    <string name="wrong_answer">"La risposta esatta è: "</string>
 </resources>
