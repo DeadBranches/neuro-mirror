@@ -150,7 +150,6 @@ class ChatViewModel(
             val threadId = currentState.currentThreadId
 
             if (userMessage.isBlank() || currentState.isLoading || threadId == null) return
-
             val userChatMessage = ChatMessage(content = userMessage, isUser = true)
 
             _state.value = currentState.copy(

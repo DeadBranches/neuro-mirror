@@ -61,6 +61,7 @@ import com.google.android.gms.common.api.ApiException
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
+import com.omnivoiceai.neuromirror.utils.guardOnlineOrShowError
 
 @Composable
 fun LoginScreen(
@@ -206,7 +207,8 @@ fun LoginScreen(
 
                 Button(
                     onClick = { 
-                        if (validateForm()) {
+                        if (!validateForm()) return@Button
+                        guardOnlineOrShowError(context) {
                             viewModel.signInWithEmail(email, password)
                         }
                     },
@@ -259,17 +261,19 @@ fun LoginScreen(
 
                 OutlinedButton(
                     onClick = {
-                        val client = viewModel.getOneTapClient()
-                        val request = viewModel.getSignInRequest()
+                        guardOnlineOrShowError(context){
+                            val client = viewModel.getOneTapClient()
+                            val request = viewModel.getSignInRequest()
 
-                        client.beginSignIn(request)
-                            .addOnSuccessListener { result ->
-                                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
-                                launcher.launch(intentSenderRequest)
-                            }
-                            .addOnFailureListener { e ->
-                                val fallbackIntent = viewModel.getGoogleSignInIntent()
-                                fallbackLauncher.launch(fallbackIntent)
+                            client.beginSignIn(request)
+                                .addOnSuccessListener { result ->
+                                    val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
+                                    launcher.launch(intentSenderRequest)
+                                }
+                                .addOnFailureListener { e ->
+                                    val fallbackIntent = viewModel.getGoogleSignInIntent()
+                                    fallbackLauncher.launch(fallbackIntent)
+                                }
                             }
                     },
                     modifier = Modifier.fillMaxWidth(),

@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatState
 import com.omnivoiceai.neuromirror.ui.screens.chat.ChatViewModel
+import com.omnivoiceai.neuromirror.utils.guardOnlineOrShowError
 
 @Composable
 fun ChatInput(chatState: ChatState, chatViewModel: ChatViewModel, noteId: Int){
@@ -38,7 +39,9 @@ fun ChatInput(chatState: ChatState, chatViewModel: ChatViewModel, noteId: Int){
 
         IconButton(
             onClick = {
-                chatViewModel.actions.sendMessage(context, noteId)
+                guardOnlineOrShowError(context){
+                    chatViewModel.actions.sendMessage(context, noteId)
+                }
             },
             enabled = chatState.currentMessage.isNotBlank() && !chatState.isLoading
         ) {

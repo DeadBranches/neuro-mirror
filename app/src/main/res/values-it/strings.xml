@@ -125,4 +125,5 @@
     <string name="loading_response">Sto pensando…</string>
     <string name="correct">Corretta!</string>
     <string name="wrong_answer">"La risposta esatta è: "</string>
+    <string name="error_network">Nessuna connessione Internet</string>
 </resources>

@@ -58,6 +58,7 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
+import com.omnivoiceai.neuromirror.utils.guardOnlineOrShowError
 
 @Composable
 fun RegisterScreen(
@@ -308,9 +309,16 @@ fun RegisterScreen(
                 EmptySpacer(height = 8.dp)
 
                 Button(
-                    onClick = { 
-                        if (validateForm()) {
-                            viewModel.signUpWithEmail(email, password, username, firstName, lastName)
+                    onClick = {
+                        if(!validateForm()) return@Button
+                        guardOnlineOrShowError(context) {
+                            viewModel.signUpWithEmail(
+                                email,
+                                password,
+                                username,
+                                firstName,
+                                lastName
+                            )
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -363,19 +371,26 @@ fun RegisterScreen(
                 // Google Sign In Button
                 OutlinedButton(
                     onClick = {
-                        val client = viewModel.getOneTapClient()
-                        val request = viewModel.getSignInRequest()
+                        guardOnlineOrShowError(context) {
+                            val client = viewModel.getOneTapClient()
+                            val request = viewModel.getSignInRequest()
 
-                        client.beginSignIn(request)
-                            .addOnSuccessListener { result ->
-                                val intentSenderRequest = androidx.activity.result.IntentSenderRequest
-                                    .Builder(result.pendingIntent.intentSender)
-                                    .build()
-                                launcher.launch(intentSenderRequest)
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(context, "One Tap non disponibile: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-                            }
+                            client.beginSignIn(request)
+                                .addOnSuccessListener { result ->
+                                    val intentSenderRequest =
+                                        androidx.activity.result.IntentSenderRequest
+                                            .Builder(result.pendingIntent.intentSender)
+                                            .build()
+                                    launcher.launch(intentSenderRequest)
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(
+                                        context,
+                                        "One Tap non disponibile: ${e.localizedMessage}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = registerState !is RegisterState.Loading

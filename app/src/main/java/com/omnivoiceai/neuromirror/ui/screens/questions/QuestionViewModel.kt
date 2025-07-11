@@ -1,5 +1,6 @@
 package com.omnivoiceai.neuromirror.ui.screens.questions
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -14,6 +15,7 @@ import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
 import com.omnivoiceai.neuromirror.domain.model.LoadingMessages
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.utils.Logger
+import com.omnivoiceai.neuromirror.utils.guardOnlineOrShowError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,7 +50,29 @@ class QuestionViewModel(
         }
     }
 
-    fun generateQuestions(note: Note, navController: NavController, loadingMessage: LoadingMessages) {
+    private suspend fun networkGeneration(navController: NavController, note: Note){
+        val loadingMessage = LoadingMessages.GeneratingQuestion;
+
+        navController.navigate(NavigationRoute.LoadingScreen(note.id, message = loadingMessage))
+
+        val response = introspectionRepository.sendQuestion(
+            userMessage = note.content,
+            threadId = note.id.toString()
+        )
+
+        questionRepository.saveQuestions(response.questions, note.id)
+
+        val updatedNote = note.copy(isEvaluated = true)
+        noteRepository.upsert(updatedNote)
+
+        badgeRepository.checkQuestionMilestones(questionRepository.getAllGrouped())
+
+        navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
+            popUpTo(NavigationRoute.LoadingScreen(note.id, loadingMessage)) { inclusive = true }
+        }
+    }
+
+    fun generateQuestions(context: Context, note: Note, navController: NavController) {
         _isLoading.value = true
 
         viewModelScope.launch {
@@ -60,22 +84,8 @@ class QuestionViewModel(
                     return@launch
                 }
 
-                navController.navigate(NavigationRoute.LoadingScreen(note.id, message = loadingMessage))
-
-                val response = introspectionRepository.sendQuestion(
-                    userMessage = note.content,
-                    threadId = note.id.toString()
-                )
-
-                questionRepository.saveQuestions(response.questions, note.id)
-
-                val updatedNote = note.copy(isEvaluated = true)
-                noteRepository.upsert(updatedNote)
-
-                badgeRepository.checkQuestionMilestones(questionRepository.getAllGrouped())
-
-                navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
-                    popUpTo(NavigationRoute.LoadingScreen(note.id, loadingMessage)) { inclusive = true }
+                guardOnlineOrShowError(context){
+                    networkGeneration(navController=navController, note=note)
                 }
             } catch (e: Exception) {
                 Logger.error("Error generating questions", e)

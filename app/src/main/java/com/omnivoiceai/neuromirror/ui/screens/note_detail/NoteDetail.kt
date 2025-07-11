@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.R
 import com.omnivoiceai.neuromirror.data.database.note.toEmoji
-import com.omnivoiceai.neuromirror.domain.model.LoadingMessages
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.screens.notes.components.NoteDate
 import com.omnivoiceai.neuromirror.ui.screens.questions.QuestionViewModel
@@ -92,7 +91,7 @@ fun NoteDetailsScreen(
 
             Button(
                 onClick = {
-                    questionViewModel.generateQuestions(note, navController, LoadingMessages.GeneratingQuestion )
+                    questionViewModel.generateQuestions(context=context, note=note, navController=navController )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
