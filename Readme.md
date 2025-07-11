@@ -13,13 +13,11 @@ NeuroMirror non si limita a registrare parole: le **interpreta**, le **organizza
 ## 🔍 **Funzionalità principali**
 
 * ✍️ Scrittura di pensieri con tagging emozionale e fotografico
-* 🧠 Visualizzazione dei pensieri come **mappa mentale dinamica**
 * 📊 **Grafici emozionali** (radar chart) e **timeline emotiva**
 * 🏆 Sistema di **badge interiori** per stimolare la riflessione (es. “Notte profonda”, “Rinascita”)
 * 🔔 Notifiche personalizzate per inviti alla scrittura o alla rilettura
-* 🌗 Modalità scura, modalità riflessiva e tema automatico
+* 🌗 Modalità scura, modalità chiara e tema automatico
 * 🔄 Persistenza dati in Room con supporto a **migrazione schema**
-* 📤 Condivisione dei propri testi via Intent
 
 ---
 
