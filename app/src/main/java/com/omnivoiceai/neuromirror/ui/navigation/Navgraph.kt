@@ -89,7 +89,7 @@ fun NavGraph(
         }
         composable<NavigationRoute.LoadingScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.LoadingScreen>()
-            LoadingScreen()
+            LoadingScreen(route.message)
         }
         composable<NavigationRoute.NoteQuestionsScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.NoteQuestionsScreen>()

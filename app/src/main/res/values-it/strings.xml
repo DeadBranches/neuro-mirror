@@ -118,4 +118,5 @@
     <string name="welcome_message">Benvenuto in NeuroMirror</string>
     <string name="start_conversation">Inizia Conversazione</string>
     <string name="continue_conversation">Continua Conversazione</string>
+    <string name="generation_questions">Generando domande…</string>
 </resources>

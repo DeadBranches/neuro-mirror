@@ -1,5 +1,6 @@
 package com.omnivoiceai.neuromirror.ui.navigation
 
+import com.omnivoiceai.neuromirror.domain.model.LoadingMessages
 import kotlinx.serialization.Serializable
 
 sealed interface NavigationRoute {
@@ -11,7 +12,7 @@ sealed interface NavigationRoute {
     @Serializable data class NoteDetailsScreen(val id: Int): NavigationRoute
     @Serializable data object ProfileScreen: NavigationRoute
     @Serializable data class NoteQuestionsScreen(val noteId: Int): NavigationRoute
-    @Serializable data class LoadingScreen(val noteId: Int): NavigationRoute
+    @Serializable data class LoadingScreen(val noteId: Int, val message: LoadingMessages): NavigationRoute
     @Serializable data class ChatScreen(val noteId: Int): NavigationRoute
     @Serializable data class SettingsSubScreen(val title: String): NavigationRoute
 }

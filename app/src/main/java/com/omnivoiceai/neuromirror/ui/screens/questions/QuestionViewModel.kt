@@ -12,6 +12,7 @@ import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.data.repositories.ThreadRepository
+import com.omnivoiceai.neuromirror.domain.model.LoadingMessages
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
 import com.omnivoiceai.neuromirror.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,7 @@ class QuestionViewModel(
         }
     }
 
-    fun generateQuestions(context: Context, note: Note, navController: NavController) {
+    fun generateQuestions(context: Context, note: Note, navController: NavController, loadingMessage: LoadingMessages) {
         _isLoading.value = true
 
         viewModelScope.launch {
@@ -60,7 +61,7 @@ class QuestionViewModel(
                     return@launch
                 }
 
-                navController.navigate(NavigationRoute.LoadingScreen(note.id))
+                navController.navigate(NavigationRoute.LoadingScreen(note.id, message = loadingMessage))
 
                 val response = introspectionRepository.sendQuestion(
                     userMessage = note.content,
@@ -75,7 +76,7 @@ class QuestionViewModel(
                 badgeRepository.checkQuestionMilestones(questionRepository.getAllGrouped())
 
                 navController.navigate(NavigationRoute.NoteQuestionsScreen(note.id)) {
-                    popUpTo(NavigationRoute.LoadingScreen(note.id)) { inclusive = true }
+                    popUpTo(NavigationRoute.LoadingScreen(note.id, loadingMessage)) { inclusive = true }
                 }
             } catch (e: Exception) {
                 Logger.error("Error generating questions", e)
