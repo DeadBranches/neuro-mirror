@@ -108,6 +108,23 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
     }
 }
 
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `Badge` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `badgeKey` TEXT NOT NULL,
+                `category` TEXT NOT NULL,
+                `level` INTEGER NOT NULL,
+                `isUnlocked` INTEGER NOT NULL,
+                `unlockTimestamp` INTEGER
+            )
+            """
+        )
+    }
+}
+
 val appModule = module {
     single {
         HttpClient(CIO) {
