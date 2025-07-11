@@ -33,7 +33,7 @@ fun SettingsSubScreen(
 
     val content: @Composable ColumnScope.() -> Unit = when (title) {
         stringResource(R.string.settings_page_theme_title) -> { { ThemeSettings(themeState, themeViewModel::changeTheme) } }
-        stringResource(R.string.settings_notifications) -> { { NotificationTest() } }
+        stringResource(R.string.settings_notifications) -> { { NotificationScreen() } }
 //        stringResource(R.string.language) -> {
         "Language" -> {
             {
