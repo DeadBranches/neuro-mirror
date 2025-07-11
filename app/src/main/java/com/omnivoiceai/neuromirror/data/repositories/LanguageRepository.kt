@@ -16,8 +16,14 @@ class LanguageRepository(context: Context) {
     fun getCurrentLanguage(): Language = _languageFlow.value
 
     private fun loadSavedLanguage(): Language {
-        val code = prefs.getString("language", "en") ?: "en"
-        return Language.entries.find { it.code == code } ?: Language.English
+        val savedCode = prefs.getString("language", null)
+
+        if (savedCode != null) {
+            return Language.entries.find { it.code == savedCode } ?: Language.English
+        }
+
+        val systemLocale = java.util.Locale.getDefault().language
+        return Language.entries.find { it.code == systemLocale } ?: Language.English
     }
 
     suspend fun setLanguage(language: Language) {
