@@ -54,8 +54,6 @@ class NotesViewModel(
             }
         }
 
-
-
         override fun removeNote(note: Note): Job = viewModelScope.launch {
             repository.delete(note)
         }

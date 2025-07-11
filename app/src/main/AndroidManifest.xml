@@ -49,14 +49,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NeuroMirror"
         tools:targetApi="31">
-<!--        <activity-->
-<!--            android:name=".ui.screens.home.HomeActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.NeuroMirror">
+            android:theme="@style/Theme.NeuroMirror"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
