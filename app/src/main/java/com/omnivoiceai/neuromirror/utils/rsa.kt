@@ -16,8 +16,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-/// Load the RSA public key from a file
-fun loadPublicKey(context: Context, fileName: String): RSAKeyParameters {
+private fun loadPublicKey(context: Context, fileName: String): RSAKeyParameters {
     val pem = context.assets.open(fileName).bufferedReader().use { it.readText() }
     val cleaned = pem
         .replace("-----BEGIN PUBLIC KEY-----", "")
@@ -35,7 +34,7 @@ fun loadPublicKey(context: Context, fileName: String): RSAKeyParameters {
     return RSAKeyParameters(false, modulus, exponent)
 }
 
-fun generateAesKeyAndIv(): Pair<SecretKey, IvParameterSpec> {
+private fun generateAesKeyAndIv(): Pair<SecretKey, IvParameterSpec> {
     val keyGen = KeyGenerator.getInstance("AES")
     keyGen.init(256)
     val secretKey = keyGen.generateKey()
@@ -47,13 +46,13 @@ fun generateAesKeyAndIv(): Pair<SecretKey, IvParameterSpec> {
     return Pair(secretKey, iv)
 }
 
-fun aesEncrypt(message: String, key: SecretKey, iv: IvParameterSpec): ByteArray {
+private fun aesEncrypt(message: String, key: SecretKey, iv: IvParameterSpec): ByteArray {
     val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
     cipher.init(Cipher.ENCRYPT_MODE, key, iv)
     return cipher.doFinal(message.toByteArray(Charsets.UTF_8))
 }
 
-fun rsaEncryptAesKey(aesKey: SecretKey, publicKey: RSAKeyParameters): ByteArray {
+private fun rsaEncryptAesKey(aesKey: SecretKey, publicKey: RSAKeyParameters): ByteArray {
     val oaep = OAEPEncoding(
         RSAEngine(),
         SHA256Digest(),      // Digest
@@ -64,7 +63,7 @@ fun rsaEncryptAesKey(aesKey: SecretKey, publicKey: RSAKeyParameters): ByteArray 
     return oaep.processBlock(aesKey.encoded, 0, aesKey.encoded.size)
 }
 
-fun encryptMessage(context: Context, message: String, publicKeyPath: String): String {
+fun encryptMessage(context: Context, message: String, publicKeyPath: String =  "public.key"): String {
     val rsaKey = loadPublicKey(context, publicKeyPath)
     val (aesKey, iv) = generateAesKeyAndIv()
     val cipherText = aesEncrypt(message, aesKey, iv)
