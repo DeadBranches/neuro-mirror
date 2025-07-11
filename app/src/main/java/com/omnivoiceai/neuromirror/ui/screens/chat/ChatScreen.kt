@@ -15,17 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.ui.components.layout.EmptySpacer
 import com.omnivoiceai.neuromirror.ui.screens.chat.components.ChatInput
-import com.omnivoiceai.neuromirror.ui.screens.chat.components.LoadingMessages
 import com.omnivoiceai.neuromirror.ui.screens.chat.components.MessageBubble
 
 @Composable
 fun ChatScreen(
     noteId: Int,
     chatViewModel: ChatViewModel,
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val chatState by chatViewModel.state.collectAsStateWithLifecycle()
@@ -34,6 +31,7 @@ fun ChatScreen(
 
     // Initialize chat when screen loads
     LaunchedEffect(noteId) {
+        chatViewModel.actions.reset()
         chatViewModel.actions.initializeChat(context, noteId)
     }
 
@@ -60,16 +58,21 @@ fun ChatScreen(
                 }
                 MessageBubble(
                     message = message,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
             
             if (chatState.isLoading) {
                 item {
-                    LoadingMessages()
+                    if(chatState.messages.count() == 0){
+                        EmptySpacer()
+                    }
+                    MessageBubble(
+                        message = ChatMessage(content = "", isUser = false),
+                        isLoading = true
+                    )
                 }
             }
-
         }
 
         ChatInput(chatState=chatState, chatViewModel=chatViewModel, noteId=noteId)

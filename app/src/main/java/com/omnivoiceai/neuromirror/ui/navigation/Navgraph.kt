@@ -104,7 +104,6 @@ fun NavGraph(
             ChatScreen(
                 noteId = route.noteId,
                 chatViewModel = chatViewModel,
-                navController = navController
             )
         }
         composable<NavigationRoute.SettingsSubScreen> { backStackEntry ->

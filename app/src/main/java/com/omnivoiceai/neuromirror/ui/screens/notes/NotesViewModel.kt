@@ -10,11 +10,13 @@ import com.omnivoiceai.neuromirror.data.repositories.IntrospectionRepository
 import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
 import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.utils.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NotesViewModel(
     private val repository: NoteRepository,
@@ -35,7 +37,9 @@ class NotesViewModel(
 
         override fun addNote(note: Note): Job = viewModelScope.launch {
             try {
-                val emotionLabel = emotionRepository.classify(note.content)
+                val emotionLabel = withContext(Dispatchers.IO) {
+                    emotionRepository.classify(note.content)
+                }
                 val emotion = EmotionDetected.valueOf(emotionLabel.name)
 
                 val updatedNote = note.copy(emotionDetected = emotion)

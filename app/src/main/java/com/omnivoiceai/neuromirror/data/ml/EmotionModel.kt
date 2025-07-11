@@ -4,6 +4,8 @@ import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class EmotionModel(context: Context) {
@@ -16,7 +18,7 @@ class EmotionModel(context: Context) {
         session = env.createSession(modelBytes, OrtSession.SessionOptions())
     }
 
-    fun classify(text: String): Int {
+    suspend fun classify(text: String): Int = withContext(Dispatchers.Default) {
         val (inputIds, attentionMask, tokenTypeIds) = tokenizer.tokenize(text)
         val shape = longArrayOf(1, inputIds.size.toLong())
 
@@ -32,7 +34,7 @@ class EmotionModel(context: Context) {
 
         val output = session.run(inputs)[0].value as Array<FloatArray>
         val scores = output[0]
-        return scores.indices.maxByOrNull { scores[it] } ?: -1
+        scores.indices.maxByOrNull { scores[it] } ?: -1
     }
 
     private fun Array<LongArray>.to2D(): Array<LongArray> = arrayOf(this[0])

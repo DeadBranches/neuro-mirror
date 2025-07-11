@@ -1,6 +1,5 @@
 package com.omnivoiceai.neuromirror.ui.screens.questions
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -49,7 +48,7 @@ class QuestionViewModel(
         }
     }
 
-    fun generateQuestions(context: Context, note: Note, navController: NavController, loadingMessage: LoadingMessages) {
+    fun generateQuestions(note: Note, navController: NavController, loadingMessage: LoadingMessages) {
         _isLoading.value = true
 
         viewModelScope.launch {
@@ -129,9 +128,7 @@ class QuestionViewModel(
     fun checkConversationExists(noteId: Int) {
         viewModelScope.launch {
             threadRepository.getThreadsWithMessagesByNoteId(noteId)
-                .collect { threads ->
-                    _hasConversation.value = threads.isNotEmpty()
-                }
+                .collect { _hasConversation.value = it.isNotEmpty() }
         }
     }
 

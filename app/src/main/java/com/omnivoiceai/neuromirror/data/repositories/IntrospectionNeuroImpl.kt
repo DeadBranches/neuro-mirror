@@ -9,6 +9,8 @@ import com.omnivoiceai.neuromirror.data.remote.QuestionIntrospectionResponse
 import com.omnivoiceai.neuromirror.data.remote.SendMessageRequest
 import com.omnivoiceai.neuromirror.utils.Logger
 import com.omnivoiceai.neuromirror.utils.encryptMessage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 interface IntrospectionRepository {
@@ -56,7 +58,7 @@ class IntrospectionNeuroImpl(
         userMessage: String,
         threadId: String,
         agentType: AgentType,
-    ): IntrospectionResponse {
+    ): IntrospectionResponse = withContext(Dispatchers.IO) {
         val plainText = userMessage
         val encryptedMessage = encryptMessage(context, plainText)
 
@@ -69,7 +71,7 @@ class IntrospectionNeuroImpl(
         Logger.info("SendMessageRequest:\n$request")
         Logger.info("Serialized:\n${Json.encodeToString(SendMessageRequest.serializer(), request)}")
 
-        return try {
+        try {
             val response = api.sendMessage(request)
 
             val messageContent = response.assistantMessage.firstOrNull()?.text?.value
@@ -97,5 +99,4 @@ class IntrospectionNeuroImpl(
             throw e
         }
     }
-
 } 

@@ -3,11 +3,16 @@ package com.omnivoiceai.neuromirror.ui.screens.chat.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.omnivoiceai.neuromirror.ui.components.forms.MarkdownText
@@ -16,14 +21,15 @@ import com.omnivoiceai.neuromirror.ui.screens.chat.ChatMessage
 @Composable
 fun MessageBubble(
     message: ChatMessage,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth(0.8f),
+            modifier = if(!isLoading) Modifier.fillMaxWidth( 0.8f) else Modifier,
             shape = RoundedCornerShape(
                 topStart = 16.dp,
                 topEnd = 16.dp,
@@ -37,7 +43,26 @@ fun MessageBubble(
                     MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
-            MarkdownText(message.content, message.isUser)
+            if (isLoading) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Thinking...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+                }
+            } else {
+                MarkdownText(message.content, message.isUser)
+            }
         }
     }
 }

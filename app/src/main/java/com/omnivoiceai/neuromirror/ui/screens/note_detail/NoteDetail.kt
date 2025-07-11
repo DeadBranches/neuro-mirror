@@ -92,8 +92,7 @@ fun NoteDetailsScreen(
 
             Button(
                 onClick = {
-                    questionViewModel.generateQuestions(context, note, navController,
-                        LoadingMessages.GeneratingQuestion )
+                    questionViewModel.generateQuestions(note, navController, LoadingMessages.GeneratingQuestion )
                 },
                 modifier = Modifier
                     .fillMaxWidth()

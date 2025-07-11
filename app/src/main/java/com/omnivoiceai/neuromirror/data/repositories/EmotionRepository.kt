@@ -20,7 +20,7 @@ class EmotionRepository(private val model: EmotionModel) {
         12 to EmotionDetected.Sarcasm
     )
 
-    fun classify(text: String): EmotionDetected {
+    suspend fun classify(text: String): EmotionDetected {
         val predictionIndex = model.classify(text)
         return idToLabel[predictionIndex] ?: EmotionDetected.Neutral
     }
