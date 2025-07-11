@@ -80,7 +80,6 @@ val appModule = module {
             .build()
             .createChatDataSource()
     }
-
     single { get<Context>().dataStore }
     single {
         Room.databaseBuilder(
@@ -90,7 +89,6 @@ val appModule = module {
         ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
     }
-
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single { ThemeRepository(get()) }
     single { LanguageRepository(get())}
@@ -107,13 +105,11 @@ val appModule = module {
     single { ProfileRepository(get()) }
     single { BadgeRepository(get<AppDatabase>().badgeDao()) }
     single { AuthRepository(get(), get()) }
-
     viewModel { ProfileViewModel(get()) }
     single { EmotionModel(get()) }
     single { EmotionRepository(get()) }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
-
     workerOf(::ExportImportWorker)
     factory(named("Neuro")) { IntrospectionNeuroImpl(get(), get()) } bind IntrospectionRepository::class
 }

@@ -77,7 +77,6 @@ class MainActivity : ComponentActivity() {
 
                 HandleUiEvents(snackbarHostState, snackbarColor)
 
-
                 NeuroMirrorTheme(
                     darkTheme = themeState.isDarkTheme
                 ) {
@@ -126,12 +125,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     override fun attachBaseContext(newBase: Context) {
         val language = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
             .getString("language", "en") ?: "en"
         val updatedContext = newBase.updateLocale(language)
         super.attachBaseContext(updatedContext)
     }
-
 }
