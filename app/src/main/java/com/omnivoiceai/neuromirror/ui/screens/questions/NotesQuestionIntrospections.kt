@@ -15,61 +15,49 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.omnivoiceai.neuromirror.R
-import com.omnivoiceai.neuromirror.data.database.note.NoteWithQuestions
-import com.omnivoiceai.neuromirror.data.database.question.MultipleChoiceQuestion
-import com.omnivoiceai.neuromirror.data.database.question.OneShotQuestion
-import com.omnivoiceai.neuromirror.data.database.question.Question
 import com.omnivoiceai.neuromirror.data.database.question.QuestionType
-import com.omnivoiceai.neuromirror.data.database.question.QuestionWithDetails
-import com.omnivoiceai.neuromirror.data.repositories.NoteRepository
-import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.navigation.NavigationRoute
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.omnivoiceai.neuromirror.ui.screens.questions.components.DefaultQuestionComponent
+import com.omnivoiceai.neuromirror.ui.screens.questions.components.LongTextQuestionComponent
+import com.omnivoiceai.neuromirror.ui.screens.questions.components.MultipleChoiceQuestionComponent
+import com.omnivoiceai.neuromirror.ui.screens.questions.components.OneShotQuestionComponent
+import com.omnivoiceai.neuromirror.ui.screens.questions.components.ShortTextQuestionComponent
 
 @Composable
 fun NotesQuestionIntrospections(
     noteId: Int,
-    noteRepository: NoteRepository,
-    questionRepository: QuestionRepository? = null,
+    viewModel: QuestionViewModel,
     navController: NavController? = null,
     modifier: Modifier = Modifier
 ) {
-    var noteWithQuestions by remember { mutableStateOf<NoteWithQuestions?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var questionsWithDetails by remember { mutableStateOf<List<QuestionWithDetails>>(emptyList()) }
-    
+    val noteWithQuestions by viewModel.noteWithQuestions.collectAsState()
+    val questionsWithDetails by viewModel.questionsWithDetails.collectAsState()
+
+
     LaunchedEffect(noteId) {
-        withContext(Dispatchers.IO) {
-            noteWithQuestions = noteRepository.getNoteWithQuestions(noteId)
-            
-            // If questionRepository is provided, get detailed questions
-            if (questionRepository != null) {
-                questionsWithDetails = questionRepository.getQuestionsWithDetailsByNoteId(noteId)
-            }
-            
-            isLoading = false
-        }
+        viewModel.loadNoteAndQuestions(noteId)
     }
-    
-    if (isLoading) {
+
+    val hasConversation by viewModel.hasConversation.collectAsState()
+
+    LaunchedEffect(noteId) {
+        viewModel.checkConversationExists(noteId)
+    }
+
+    if (noteWithQuestions == null) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.padding(top = 32.dp)
-            )
+            CircularProgressIndicator(modifier = Modifier.padding(top = 32.dp))
             Text(
                 text = "Loading questions...",
                 style = MaterialTheme.typography.bodyLarge,
@@ -78,7 +66,7 @@ fun NotesQuestionIntrospections(
         }
         return
     }
-    
+
     noteWithQuestions?.let { noteWithQ ->
         Column(
             modifier = modifier
@@ -124,101 +112,97 @@ fun NotesQuestionIntrospections(
                 ) {
                     // Find the question details from the list of detailed questions
                     val questionDetail = questionsWithDetails.find { it.question.id == question.id }
-                    
+
                     when (question.type) {
                         QuestionType.Oneshot -> {
-                            // Use the oneshot details from the database if available
                             val oneShotDetails = questionDetail?.oneShotData
                             if (oneShotDetails != null) {
                                 OneShotQuestionComponent(
                                     question = question,
                                     oneShotQuestion = oneShotDetails,
-                                    questionRepository = questionRepository!!,
+                                    onLoadAnswer = { id -> viewModel.getOneShotAnswer(id) },
+                                    onSaveAnswer = { id, answer ->
+                                        viewModel.saveOneShotAnswer(
+                                            id,
+                                            answer
+                                        )
+                                    },
                                     modifier = Modifier.padding(16.dp)
                                 )
+
                             } else {
-                                // Fallback if details not found
                                 DefaultQuestionComponent(question)
                             }
                         }
+
                         QuestionType.Multiple -> {
-                            // Use the multiple choice details from the database if available
                             val multipleChoiceDetails = questionDetail?.multipleChoiceData
                             if (multipleChoiceDetails != null) {
                                 MultipleChoiceQuestionComponent(
                                     question = question,
                                     multipleChoiceQuestion = multipleChoiceDetails,
-                                    questionRepository = questionRepository!!,
+                                    onLoadAnswer = { id -> viewModel.getSelectedOptionIndex(id) },
+                                    onSaveAnswer = { id, index, text ->
+                                        viewModel.saveSelectedOption(
+                                            id,
+                                            index,
+                                            text
+                                        )
+                                    },
                                     modifier = Modifier.padding(16.dp)
                                 )
+
                             } else {
-                                // Fallback if details not found
                                 DefaultQuestionComponent(question)
                             }
                         }
+
                         QuestionType.ShortText -> {
                             ShortTextQuestionComponent(
                                 question = question,
-                                questionRepository = questionRepository!!,
+                                onLoadAnswer = { id -> viewModel.getShortAnswer(id) },
+                                onSaveAnswer = { id, text -> viewModel.saveShortAnswer(id, text) },
                                 modifier = Modifier.padding(16.dp)
                             )
+
                         }
+
                         QuestionType.LongText -> {
                             LongTextQuestionComponent(
                                 question = question,
-                                questionRepository = questionRepository!!,
+                                onLoadAnswer = { id -> viewModel.getLongAnswer(id) },
+                                onSaveAnswer = { id, text -> viewModel.saveLongAnswer(id, text) },
                                 modifier = Modifier.padding(16.dp)
                             )
+
                         }
                     }
+
                 }
             }
             
-            // Chat button
             navController?.let {
-                Button(
-                    onClick = {
-                        navController.navigate(NavigationRoute.ChatScreen(noteId))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp)
-                ) {
-                    Text("Start Conversation")
-                }
+                    Button(
+                        onClick = {
+                            navController.navigate(NavigationRoute.ChatScreen(noteId))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
+                    ) {
+                        if(hasConversation){
+                            Text( stringResource(R.string.start_conversation))
+                        } else {
+                            Text( stringResource(R.string.continue_conversation))
+                        }
+                    }
             }
         }
     } ?: run {
-        // Handle case when note is not found
         Text(
             text = "Note not found",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Composable
-fun DefaultQuestionComponent(question: Question) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        // Question title
-        question.title?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-        
-        // Question type
-        Text(
-            text = "Question type: ${question.type}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

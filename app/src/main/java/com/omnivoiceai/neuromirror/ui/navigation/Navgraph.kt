@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginScreen
 import com.omnivoiceai.neuromirror.ui.screens.auth.login.LoginViewModel
 import com.omnivoiceai.neuromirror.ui.screens.auth.register.RegisterScreen
@@ -30,7 +29,6 @@ import com.omnivoiceai.neuromirror.ui.screens.settings.theme.ThemeViewModel
 import com.omnivoiceai.neuromirror.ui.screens.splash.SplashScreen
 import com.omnivoiceai.neuromirror.utils.Logger
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -51,7 +49,6 @@ fun NavGraph(
     val notesState by notesViewModel.state.collectAsStateWithLifecycle()
     val questionViewModel = koinViewModel<QuestionViewModel>(parameters = { parametersOf("Neuro") })
     val chatViewModel = koinViewModel<ChatViewModel>(parameters = { parametersOf("Neuro") })
-    val questionRepository = koinInject<QuestionRepository>()
 
     NavHost(
         navController = navController,
@@ -96,11 +93,9 @@ fun NavGraph(
         }
         composable<NavigationRoute.NoteQuestionsScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NavigationRoute.NoteQuestionsScreen>()
-            val noteRepository = notesViewModel.getNoteRepository()
             NotesQuestionIntrospections(
                 noteId = route.noteId,
-                noteRepository = noteRepository,
-                questionRepository = questionRepository,
+                viewModel = questionViewModel,
                 navController = navController
             )
         }

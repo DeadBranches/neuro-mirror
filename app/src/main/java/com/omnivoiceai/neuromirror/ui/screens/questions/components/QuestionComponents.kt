@@ -1,6 +1,5 @@
-package com.omnivoiceai.neuromirror.ui.screens.questions
+package com.omnivoiceai.neuromirror.ui.screens.questions.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,12 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,38 +20,34 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.omnivoiceai.neuromirror.data.database.question.MultipleChoiceQuestion
 import com.omnivoiceai.neuromirror.data.database.question.OneShotQuestion
 import com.omnivoiceai.neuromirror.data.database.question.Question
-import com.omnivoiceai.neuromirror.data.database.question.QuestionType
-import com.omnivoiceai.neuromirror.data.repositories.QuestionRepository
 import kotlinx.coroutines.launch
 
 @Composable
 fun OneShotQuestionComponent(
     question: Question,
     oneShotQuestion: OneShotQuestion,
-    questionRepository: QuestionRepository,
+    onLoadAnswer: suspend (Int) -> String?,
+    onSaveAnswer: suspend (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedOption by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    
-    // Load existing answer when component is first composed
+
+    // Load existing answer
     LaunchedEffect(question.id) {
-        val existingAnswer = questionRepository.getLatestAnswerForQuestion(question.id)
-        selectedOption = existingAnswer?.selectedOptionText
+        selectedOption = onLoadAnswer(question.id)
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // Question title
         question.title?.let {
             Text(
                 text = it,
@@ -62,22 +55,17 @@ fun OneShotQuestionComponent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        
-        // Options
+
         oneShotQuestion.answers.forEach { option ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .selectable(
                         selected = (option == selectedOption),
-                        onClick = { 
+                        onClick = {
                             selectedOption = option
-                            // Save the answer
                             coroutineScope.launch {
-                                questionRepository.saveAnswer(
-                                    questionId = question.id,
-                                    selectedOptionText = option
-                                )
+                                onSaveAnswer(question.id, option)
                             }
                         },
                         role = Role.RadioButton
@@ -87,14 +75,10 @@ fun OneShotQuestionComponent(
             ) {
                 RadioButton(
                     selected = (option == selectedOption),
-                    onClick = { 
+                    onClick = {
                         selectedOption = option
-                        // Save the answer
                         coroutineScope.launch {
-                            questionRepository.saveAnswer(
-                                questionId = question.id,
-                                selectedOptionText = option
-                            )
+                            onSaveAnswer(question.id, option)
                         }
                     }
                 )
@@ -108,28 +92,27 @@ fun OneShotQuestionComponent(
     }
 }
 
+
 @Composable
 fun MultipleChoiceQuestionComponent(
     question: Question,
     multipleChoiceQuestion: MultipleChoiceQuestion,
-    questionRepository: QuestionRepository,
+    onLoadAnswer: suspend (Int) -> Int?, // questionId → selectedIndex
+    onSaveAnswer: suspend (questionId: Int, selectedIndex: Int, selectedText: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedOption by remember { mutableStateOf<Int?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    
-    // Load existing answer when component is first composed
+
     LaunchedEffect(question.id) {
-        val existingAnswer = questionRepository.getLatestAnswerForQuestion(question.id)
-        selectedOption = existingAnswer?.selectedOptionIndex
+        selectedOption = onLoadAnswer(question.id)
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // Question title
         question.title?.let {
             Text(
                 text = it,
@@ -137,23 +120,17 @@ fun MultipleChoiceQuestionComponent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        
-        // Options
+
         multipleChoiceQuestion.options.forEachIndexed { index, option ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .selectable(
                         selected = (index == selectedOption),
-                        onClick = { 
+                        onClick = {
                             selectedOption = index
-                            // Save the answer
                             coroutineScope.launch {
-                                questionRepository.saveAnswer(
-                                    questionId = question.id,
-                                    selectedOptionIndex = index,
-                                    selectedOptionText = option
-                                )
+                                onSaveAnswer(question.id, index, option)
                             }
                         },
                         role = Role.RadioButton
@@ -163,15 +140,10 @@ fun MultipleChoiceQuestionComponent(
             ) {
                 RadioButton(
                     selected = (index == selectedOption),
-                    onClick = { 
+                    onClick = {
                         selectedOption = index
-                        // Save the answer
                         coroutineScope.launch {
-                            questionRepository.saveAnswer(
-                                questionId = question.id,
-                                selectedOptionIndex = index,
-                                selectedOptionText = option
-                            )
+                            onSaveAnswer(question.id, index, option)
                         }
                     }
                 )
@@ -182,11 +154,10 @@ fun MultipleChoiceQuestionComponent(
                 )
             }
         }
-        
-        // Show correct answer if one is selected
-        if (selectedOption != null) {
+
+        selectedOption?.let {
             Spacer(modifier = Modifier.height(16.dp))
-            val isCorrect = selectedOption == multipleChoiceQuestion.correctIndex
+            val isCorrect = it == multipleChoiceQuestion.correctIndex
             Text(
                 text = if (isCorrect) "Correct!" else "The correct answer is: ${multipleChoiceQuestion.options[multipleChoiceQuestion.correctIndex]}",
                 style = MaterialTheme.typography.bodyMedium,
@@ -196,27 +167,26 @@ fun MultipleChoiceQuestionComponent(
     }
 }
 
+
 @Composable
 fun ShortTextQuestionComponent(
     question: Question,
-    questionRepository: QuestionRepository,
+    onLoadAnswer: suspend (Int) -> String?,
+    onSaveAnswer: suspend (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var text by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    
-    // Load existing answer when component is first composed
+
     LaunchedEffect(question.id) {
-        val existingAnswer = questionRepository.getLatestAnswerForQuestion(question.id)
-        text = existingAnswer?.answerText ?: ""
+        text = onLoadAnswer(question.id) ?: ""
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // Question title
         question.title?.let {
             Text(
                 text = it,
@@ -224,18 +194,13 @@ fun ShortTextQuestionComponent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        
-        // Text field for short answer
+
         OutlinedTextField(
             value = text,
             onValueChange = { newText ->
                 text = newText
-                // Save the answer with a slight delay to avoid too many database writes
                 coroutineScope.launch {
-                    questionRepository.saveAnswer(
-                        questionId = question.id,
-                        answerText = newText
-                    )
+                    onSaveAnswer(question.id, newText)
                 }
             },
             modifier = Modifier
@@ -247,27 +212,26 @@ fun ShortTextQuestionComponent(
     }
 }
 
+
 @Composable
 fun LongTextQuestionComponent(
     question: Question,
-    questionRepository: QuestionRepository,
+    onLoadAnswer: suspend (Int) -> String?,
+    onSaveAnswer: suspend (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var text by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    
-    // Load existing answer when component is first composed
+
     LaunchedEffect(question.id) {
-        val existingAnswer = questionRepository.getLatestAnswerForQuestion(question.id)
-        text = existingAnswer?.answerText ?: ""
+        text = onLoadAnswer(question.id) ?: ""
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        // Question title
         question.title?.let {
             Text(
                 text = it,
@@ -275,18 +239,13 @@ fun LongTextQuestionComponent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        
-        // Text field for long answer
+
         OutlinedTextField(
             value = text,
             onValueChange = { newText ->
                 text = newText
-                // Save the answer with a slight delay to avoid too many database writes
                 coroutineScope.launch {
-                    questionRepository.saveAnswer(
-                        questionId = question.id,
-                        answerText = newText
-                    )
+                    onSaveAnswer(question.id, newText)
                 }
             },
             modifier = Modifier
@@ -299,11 +258,9 @@ fun LongTextQuestionComponent(
     }
 }
 
+
 @Composable
-fun DefaultQuestionComponent(
-    question: Question,
-    questionRepository: QuestionRepository? = null
-) {
+fun DefaultQuestionComponent(question: Question) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -317,7 +274,7 @@ fun DefaultQuestionComponent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        
+
         // Question type
         Text(
             text = "Question type: ${question.type}",
@@ -325,4 +282,4 @@ fun DefaultQuestionComponent(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
-} 
+}

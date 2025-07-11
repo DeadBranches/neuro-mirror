@@ -97,7 +97,7 @@ val appModule = module {
     viewModel { EmotionViewModel(get()) }
     viewModel { BadgeViewModel(get()) }
     viewModel { (modelName: String) -> NotesViewModel(get(), get(), get(named(modelName)), get(), get()) }
-    viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName)), get()) }
+    viewModel { (modelName: String) -> QuestionViewModel(get(), get(), get(named(modelName)), get(), get()) }
     viewModel { (modelName: String) -> ChatViewModel(get(named(modelName)), get(), get(), get(), get()) }
     single { NoteRepository(get<AppDatabase>().noteDao()) }
     single { QuestionRepository(get<AppDatabase>().questionDao()) }

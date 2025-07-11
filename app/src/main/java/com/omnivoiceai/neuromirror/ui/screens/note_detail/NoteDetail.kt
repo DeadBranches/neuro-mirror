@@ -41,11 +41,11 @@ fun NoteDetailsScreen(
     val noteWithQuestions by questionViewModel.noteWithQuestions.collectAsState()
 
     LaunchedEffect(noteId) {
-        questionViewModel.loadNoteDetails(noteId)
+        questionViewModel.loadNoteAndQuestions(noteId)
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        questionViewModel.loadNoteDetails(noteId)
+        questionViewModel.loadNoteAndQuestions(noteId)
     }
 
     noteWithQuestions?.let { data ->
