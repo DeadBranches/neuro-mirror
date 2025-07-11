@@ -2,6 +2,7 @@ package com.omnivoiceai.neuromirror.data.repositories
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.omnivoiceai.neuromirror.domain.model.Language
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,19 +16,23 @@ class LanguageRepository(context: Context) {
 
     fun getCurrentLanguage(): Language = _languageFlow.value
 
+    private fun languageToCheck(code: String): Language{
+        return Language.entries.find { it.code == code } ?: Language.English
+    }
+
     private fun loadSavedLanguage(): Language {
         val savedCode = prefs.getString("language", null)
 
         if (savedCode != null) {
-            return Language.entries.find { it.code == savedCode } ?: Language.English
+            return languageToCheck(savedCode)
         }
 
         val systemLocale = java.util.Locale.getDefault().language
-        return Language.entries.find { it.code == systemLocale } ?: Language.English
+        return languageToCheck(systemLocale)
     }
 
     suspend fun setLanguage(language: Language) {
-        prefs.edit().putString("language", language.code).apply()
+        prefs.edit { putString("language", language.code) }
         _languageFlow.emit(language)
     }
 }
