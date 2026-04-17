@@ -1,27 +1,9 @@
-## 🧠 **NeuroMirror – Esplora i tuoi pensieri. Comprendi te stesso.**
+## 🧠**NeuroMirror – Explore your thoughts. Understand yourself.**
 
-### 🎯 **Cos'è NeuroMirror**
+🎯 **What is NeuroMirror**
 
-NeuroMirror è un'app mobile che trasforma il classico diario personale in **uno specchio intelligente dell’interiorità dell’utente**. Attraverso un’interfaccia semplice ma evoluta, l’utente può scrivere liberamente i propri pensieri, annotare emozioni, allegare immagini e rivedere la propria storia interiore nel tempo.
+NeuroMirror is a mobile app that transforms the classic personal diary into an intelligent mirror of the user’s inner world. Through a simple yet sophisticated interface, users can freely write their thoughts, note their emotions, attach images, and review their inner story over time.
 
-### 🌱 **Cosa rende unica l’app**
+🌱 **What makes the app unique**
 
-NeuroMirror non si limita a registrare parole: le **interpreta**, le **organizza visivamente**, e restituisce all’utente una visione chiara e strutturata di **chi è stato, cosa ha provato e quali schemi ricorrono** nella sua esperienza emotiva. È uno strumento di **auto-riflessione profonda**, ma anche esteticamente curato e tecnicamente robusto.
-
----
-
-## 🔍 **Funzionalità principali**
-
-* ✍️ Scrittura di pensieri con tagging emozionale e fotografico
-* 📊 **Grafici emozionali** (radar chart) e **timeline emotiva**
-* 🏆 Sistema di **badge interiori** per stimolare la riflessione (es. “Notte profonda”, “Rinascita”)
-* 🔔 Notifiche personalizzate per inviti alla scrittura o alla rilettura
-* 🌗 Modalità scura, modalità chiara e tema automatico
-* 🔄 Persistenza dati in Room con supporto a **migrazione schema**
-
----
-
-## 💡 **Visione**
-
-Viviamo sommersi da stimoli, ma raramente ci fermiamo ad ascoltare cosa succede *dentro*.
-**NeuroMirror** nasce per colmare quel vuoto: è un’app che ti accompagna, ti ascolta e **ti riflette**. Non dà risposte, ma ti aiuta a **porre le domande giuste**.
+NeuroMirror doesn’t just record words: it interprets them, organizes them visually, and gives the user a clear, structured view of who they have been, what they have felt, and which patterns recur in their emotional experience. It’s a tool for deep self-reflection, but also aesthetically refined and technically robust.
